@@ -115,12 +115,34 @@ document.addEventListener('DOMContentLoaded', () => {
                     prevStep.classList.remove('active');
                     prevStep.classList.add('completed');
                     prevStep.querySelector('.step-status').setAttribute('data-lucide', 'check-circle-2');
+                    // Reset step 5 HTML text upon completion
+                    if (currentStep - 1 === 5) {
+                        prevStep.innerHTML = '<i data-lucide="check-circle-2" class="step-status"></i> Detectando cookies y scripts de seguimiento...';
+                    }
                 }
                 
                 // Mark current as active
                 const activeStep = document.getElementById(`step-${currentStep}`);
                 activeStep.classList.add('active');
                 activeStep.querySelector('.step-status').setAttribute('data-lucide', 'loader-2');
+                
+                // Animate recursive page crawl count at step 5
+                if (currentStep === 5) {
+                    let pageCount = 1;
+                    const pageCrawlInterval = setInterval(() => {
+                        if (currentStep === 6) {
+                            clearInterval(pageCrawlInterval);
+                            return;
+                        }
+                        if (pageCount < 15) {
+                            pageCount += Math.floor(Math.random() * 2) + 1;
+                            activeStep.innerHTML = `<i data-lucide="loader-2" class="step-status"></i> Detectando cookies y scripts de seguimiento... (Rastreadas: ${pageCount} páginas)`;
+                            lucide.createIcons();
+                        } else {
+                            clearInterval(pageCrawlInterval);
+                        }
+                    }, 180);
+                }
                 
                 // Update bar
                 const percentage = ((currentStep + 1) / totalSteps) * 100;
@@ -247,6 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('stat-forms').innerText = data.summary.formCount;
         document.getElementById('stat-trackers').innerText = data.summary.trackerCount;
         document.getElementById('stat-policies').innerText = (data.summary.privacyPolicyFound ? 1 : 0) + (data.summary.termsFound ? 1 : 0);
+        document.getElementById('stat-pages').innerText = data.summary.pagesScannedCount;
         
         const headerCount = (data.details.securityHeaders.hsts ? 1 : 0) + 
                             (data.details.securityHeaders.csp ? 1 : 0) + 
@@ -254,11 +277,24 @@ document.addEventListener('DOMContentLoaded', () => {
                             (data.details.securityHeaders.xContentTypeOptions ? 1 : 0);
         document.getElementById('stat-headers').innerText = `${headerCount}/4`;
 
+        // Populate Scanned Pages List
+        const pagesList = document.getElementById('scanned-pages-list');
+        pagesList.innerHTML = '';
+        data.details.scannedPages.forEach(p => {
+            const shortUrl = p.replace(/^https?:\/\/(www\.)?/, '');
+            pagesList.innerHTML += `
+                <li style="display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="check" class="text-success" style="width:12px; height:12px;"></i>
+                    <a href="${p}" target="_blank" style="color:var(--text-muted); text-decoration:none; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:90%;">${shortUrl}</a>
+                </li>
+            `;
+        });
+
         // 1. POPULATE TAB: FORMS
         const formsBody = document.querySelector('#forms-table tbody');
         formsBody.innerHTML = '';
         if (data.details.forms.length === 0) {
-            formsBody.innerHTML = `<tr><td colspan="4" class="text-muted" style="text-align:center;">No se detectaron formularios que recolecten datos en esta página.</td></tr>`;
+            formsBody.innerHTML = `<tr><td colspan="5" class="text-muted" style="text-align:center;">No se detectaron formularios que recolecten datos personales en este sitio.</td></tr>`;
         } else {
             data.details.forms.forEach(f => {
                 const inputsText = f.inputs.map(i => `${i.name || i.type} (${i.type})`).join(', ') || 'Sin campos legibles';
@@ -267,12 +303,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     `<span class="badge-status danger"><i data-lucide="x"></i> Faltante</span>`;
                 const statusText = f.hasConsentCheckbox ? 
                     `<span class="text-success">Conforme (Art. 12)</span>` : 
-                    `<span class="text-danger">Riesgo Crítico (Tratamiento sin Consentimiento previo)</span>`;
+                    `<span class="text-danger">Riesgo Crítico (Tratamiento sin consentimiento previo)</span>`;
+                
+                const pageUrlShort = f.pageUrl.replace(/^https?:\/\/(www\.)?/, '');
                 
                 formsBody.innerHTML += `
                     <tr>
                         <td><strong>#${f.id}</strong></td>
                         <td>${inputsText}</td>
+                        <td style="font-family:monospace; font-size:0.75rem;"><a href="${f.pageUrl}" target="_blank" class="text-primary">${pageUrlShort}</a></td>
                         <td>${consentBadge}</td>
                         <td>${statusText}</td>
                     </tr>
@@ -291,6 +330,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const privacyLinkText = data.summary.privacyPolicyFound ? 
             data.details.privacyLinks.map(l => `<a href="${l.href}" target="_blank" class="text-primary">${l.text || l.href}</a>`).join('<br>') : 
             '<span class="text-muted">Ninguno</span>';
+        const privacyPages = data.summary.privacyPolicyFound ? 
+            data.details.privacyLinks.map(l => l.pageUrl.replace(/^https?:\/\/(www\.)?/, '')).join('<br>') : 
+            '<span class="text-muted">-</span>';
         const privacyAction = data.summary.privacyPolicyFound ? 
             '<span class="text-success">Ninguna requerida</span>' : 
             `<button class="btn btn-outline btn-sm" onclick="document.querySelector('[data-target=resources-tab]').click()"><i data-lucide="plus"></i> Generar Política</button>`;
@@ -300,6 +342,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td><strong>Política de Privacidad (Art. 14 ter)</strong></td>
                 <td>${privacyStatusBadge}</td>
                 <td>${privacyLinkText}</td>
+                <td style="font-family:monospace; font-size:0.75rem;">${privacyPages}</td>
                 <td>${privacyAction}</td>
             </tr>
         `;
@@ -311,6 +354,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const termsLinkText = data.summary.termsFound ? 
             data.details.termsLinks.map(l => `<a href="${l.href}" target="_blank" class="text-primary">${l.text || l.href}</a>`).join('<br>') : 
             '<span class="text-muted">Ninguno</span>';
+        const termsPages = data.summary.termsFound ? 
+            data.details.termsLinks.map(l => l.pageUrl.replace(/^https?:\/\/(www\.)?/, '')).join('<br>') : 
+            '<span class="text-muted">-</span>';
         const termsAction = data.summary.termsFound ? 
             '<span class="text-success">Ninguna requerida</span>' : 
             '<span class="text-muted">Crear documento contractual</span>';
@@ -320,6 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td><strong>Términos y Condiciones del Sitio</strong></td>
                 <td>${termsStatusBadge}</td>
                 <td>${termsLinkText}</td>
+                <td style="font-family:monospace; font-size:0.75rem;">${termsPages}</td>
                 <td>${termsAction}</td>
             </tr>
         `;
@@ -328,15 +375,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const cookiesBody = document.querySelector('#cookies-table tbody');
         cookiesBody.innerHTML = '';
         if (data.details.trackers.length === 0) {
-            cookiesBody.innerHTML = `<tr><td colspan="4" class="text-muted" style="text-align:center;">No se detectaron scripts de seguimiento de terceros comunes en la página.</td></tr>`;
+            cookiesBody.innerHTML = `<tr><td colspan="5" class="text-muted" style="text-align:center;">No se detectaron scripts de seguimiento de terceros comunes en el sitio.</td></tr>`;
         } else {
             data.details.trackers.forEach(t => {
+                const pageUrlShort = t.pageUrl.replace(/^https?:\/\/(www\.)?/, '');
                 cookiesBody.innerHTML += `
                     <tr>
                         <td><strong>${t.name}</strong></td>
                         <td>${t.category}</td>
                         <td><span class="badge-status warning">${t.source}</span></td>
-                        <td style="font-family:monospace; font-size:0.75rem;">${t.url}</td>
+                        <td style="font-family:monospace; font-size:0.75rem;"><a href="${t.pageUrl}" target="_blank" class="text-primary">${pageUrlShort}</a></td>
+                        <td style="font-family:monospace; font-size:0.75rem; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${t.url}</td>
                     </tr>
                 `;
             });
