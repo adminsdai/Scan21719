@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escáner de Cumplimiento Ley 21.719 - Protección de Datos Chile</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="glow-bg"></div>
+    
+    <!-- Header Warning Banner (Countdown) -->
+    <div class="countdown-banner">
+        <div class="banner-content">
+            <span class="warning-badge"><i data-lucide="alert-triangle"></i> Ley N° 21.719</span>
+            <span class="banner-text">Entrada en vigencia plena: <strong>1 de diciembre de 2026</strong>. Tiempo restante:</span>
+            <div id="countdown" class="timer">
+                <span class="time-block"><strong id="days">00</strong>d</span>
+                <span class="time-block"><strong id="hours">00</strong>h</span>
+                <span class="time-block"><strong id="minutes">00</strong>m</span>
+                <span class="time-block"><strong id="seconds">00</strong>s</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container Layout -->
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <i data-lucide="shield-check"></i>
+                </div>
+                <div>
+                    <h2>APDP Shield</h2>
+                    <span class="version">Escáner Ley 21.719</span>
+                </div>
+            </div>
+            
+            <nav class="side-nav">
+                <button class="nav-btn active" data-target="scanner-tab">
+                    <i data-lucide="scan-eye"></i> Escáner de URLs
+                </button>
+                <button class="nav-btn" data-target="resources-tab">
+                    <i data-lucide="file-code"></i> Generador de Recursos
+                </button>
+                <button class="nav-btn" data-target="law-tab">
+                    <i data-lucide="book-open"></i> Guía de la Ley 21.719
+                </button>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="fine-card">
+                    <div class="fine-header">
+                        <i data-lucide="info"></i>
+                        <span>Multas Máximas</span>
+                    </div>
+                    <p class="fine-amount">Hasta 20.000 UTM</p>
+                    <p class="fine-desc">O hasta el 4% de ingresos anuales en reincidencia de grandes empresas.</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="content-area">
+            <!-- Section: URL Scanner -->
+            <section id="scanner-tab" class="tab-content active">
+                <div class="welcome-banner">
+                    <div class="welcome-text">
+                        <h1>Escáner de Cumplimiento de Sitios Web</h1>
+                        <p>Analiza el código de tu sitio, cookies, formularios de contacto y cabeceras de seguridad para verificar el nivel de cumplimiento ante la nueva normativa de protección de datos en Chile.</p>
+                    </div>
+                </div>
+
+                <div class="grid-layout">
+                    <!-- Left Column: Input and Progress -->
+                    <div class="left-col">
+                        <div class="card scan-card">
+                            <h3>Ingresa la URL a Analizar</h3>
+                            <p class="card-desc">Inspecciona enlaces de privacidad, formularios sin consentimiento, scripts de rastreo y cabeceras HTTP.</p>
+                            
+                            <form id="scan-form" class="scan-form">
+                                <div class="input-wrapper">
+                                    <i data-lucide="globe" class="input-icon"></i>
+                                    <input type="text" id="url-input" placeholder="ej: sdaichile.com" value="sdaichile.com" required>
+                                </div>
+                                <button type="submit" id="scan-btn" class="btn btn-primary">
+                                    <span>Iniciar Escaneo</span>
+                                    <i data-lucide="play" class="btn-icon"></i>
+                                </button>
+                            </form>
+                            
+                            <!-- Presets -->
+                            <div class="presets-container">
+                                <span>Sitios de ejemplo rápidos:</span>
+                                <div class="presets-buttons">
+                                    <button class="btn btn-outline preset-btn" data-url="sdaichile.com">sdaichile.com</button>
+                                    <button class="btn btn-outline preset-btn" data-url="wikipedia.org">wikipedia.org</button>
+                                    <button class="btn btn-outline preset-btn" data-url="google.cl">google.cl</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Scan Steps Tracker (visible during scan) -->
+                        <div class="card progress-card hidden" id="progress-card">
+                            <h3>Progreso del Escaneo</h3>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" id="progress-fill"></div>
+                            </div>
+                            <ul class="step-list">
+                                <li class="step-item" id="step-0"><i data-lucide="circle-dashed" class="step-status"></i> Conectando al servidor...</li>
+                                <li class="step-item" id="step-1"><i data-lucide="circle-dashed" class="step-status"></i> Descargando código HTML...</li>
+                                <li class="step-item" id="step-2"><i data-lucide="circle-dashed" class="step-status"></i> Analizando cabeceras HTTP de respuesta...</li>
+                                <li class="step-item" id="step-3"><i data-lucide="circle-dashed" class="step-status"></i> Analizando formularios y captura de datos (PII)...</li>
+                                <li class="step-item" id="step-4"><i data-lucide="circle-dashed" class="step-status"></i> Buscando enlaces de Políticas e Información Legal...</li>
+                                <li class="step-item" id="step-5"><i data-lucide="circle-dashed" class="step-status"></i> Detectando cookies y scripts de seguimiento...</li>
+                                <li class="step-item" id="step-6"><i data-lucide="circle-dashed" class="step-status"></i> Evaluando cumplimiento Ley 21.719...</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Initial State / Summary Shield -->
+                    <div class="right-col">
+                        <!-- Initial Info Card -->
+                        <div class="card info-card" id="initial-info-card">
+                            <div class="info-icon">
+                                <i data-lucide="shield-alert"></i>
+                            </div>
+                            <h3>¿Está listo tu sitio?</h3>
+                            <p>La Ley 21.719 actualiza la Ley 19.628 sobre protección de la vida privada, alineándose con el estándar europeo (RGPD). Introduce la creación de la <strong>Agencia de Protección de Datos Personales (APDP)</strong> y exige el consentimiento explícito de los usuarios antes del tratamiento de sus datos personales o la instalación de cookies.</p>
+                            <div class="info-list">
+                                <div class="info-item">
+                                    <i data-lucide="check-circle-2" class="text-success"></i>
+                                    <span>Verifica formularios de contacto</span>
+                                </div>
+                                <div class="info-item">
+                                    <i data-lucide="check-circle-2" class="text-success"></i>
+                                    <span>Detecta rastreadores ocultos</span>
+                                </div>
+                                <div class="info-item">
+                                    <i data-lucide="check-circle-2" class="text-success"></i>
+                                    <span>Valida cabeceras de protección</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Results Dashboard Card (hidden initially) -->
+                        <div class="card results-card hidden" id="results-card">
+                            <div class="results-summary-row">
+                                <div class="score-circle-container">
+                                    <svg viewBox="0 0 100 100" class="score-svg">
+                                        <circle cx="50" cy="50" r="45" class="score-circle-bg"></circle>
+                                        <circle cx="50" cy="50" r="45" class="score-circle-fill" id="score-fill" stroke-dasharray="283" stroke-dashoffset="283"></circle>
+                                    </svg>
+                                    <div class="score-text">
+                                        <span class="score-number" id="score-val">0</span>
+                                        <span class="score-label">Cumplimiento</span>
+                                    </div>
+                                </div>
+                                <div class="status-info">
+                                    <h3 id="site-title-result">sdaichile.com</h3>
+                                    <p class="scan-date">Analizado: <span id="scan-date-val">-</span></p>
+                                    <div class="status-badge" id="status-badge-val">Crítico</div>
+                                </div>
+                            </div>
+
+                            <div class="summary-stats-grid">
+                                <div class="stat-box">
+                                    <span class="stat-val" id="stat-forms">0</span>
+                                    <span class="stat-label">Formularios</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-val" id="stat-trackers">0</span>
+                                    <span class="stat-label">Rastreadores</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-val" id="stat-policies">0</span>
+                                    <span class="stat-label">Enlaces Legales</span>
+                                </div>
+                                <div class="stat-box">
+                                    <span class="stat-val" id="stat-headers">0/4</span>
+                                    <span class="stat-label">Cabeceras HTTP</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detailed Report Section (visible after scan) -->
+                <div class="card report-detail-card hidden" id="report-detail-card">
+                    <div class="report-header">
+                        <h2>Detalle Técnico del Diagnóstico</h2>
+                        <button class="btn btn-outline" id="print-report-btn">
+                            <i data-lucide="printer"></i> Imprimir Reporte
+                        </button>
+                    </div>
+
+                    <div class="tabs-container">
+                        <div class="tabs-header">
+                            <button class="tab-btn active" data-tab="tab-forms">Formularios y Datos</button>
+                            <button class="tab-btn" data-tab="tab-policies">Políticas Legales</button>
+                            <button class="tab-btn" data-tab="tab-cookies">Cookies y Rastreadores</button>
+                            <button class="tab-btn" data-tab="tab-security">Seguridad Técnica</button>
+                        </div>
+                        
+                        <!-- Tab: Forms -->
+                        <div class="tab-pane active" id="tab-forms">
+                            <div class="pane-header">
+                                <i data-lucide="form-input" class="pane-icon text-warning"></i>
+                                <div>
+                                    <h4>Captura de Datos Personales (PII)</h4>
+                                    <p>La Ley 21.719 exige consentimiento previo y libre para capturar datos. El sitio web debe informar el propósito exacto y proveer un checkbox desmarcado.</p>
+                                </div>
+                            </div>
+                            <div class="table-container">
+                                <table id="forms-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID/Formulario</th>
+                                            <th>Campos Detectados</th>
+                                            <th>Casilla de Consentimiento</th>
+                                            <th>Estado Ley 21.719</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Dynamic rows -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Tab: Policies -->
+                        <div class="tab-pane" id="tab-policies">
+                            <div class="pane-header">
+                                <i data-lucide="file-text" class="pane-icon text-primary"></i>
+                                <div>
+                                    <h4>Políticas de Privacidad y Términos</h4>
+                                    <p>Art. 14 ter: Toda entidad debe tener de manera permanente, clara y gratuita las políticas sobre tratamiento de datos de los titulares.</p>
+                                </div>
+                            </div>
+                            <div class="table-container">
+                                <table id="policies-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Documento Exigido</th>
+                                            <th>Estado</th>
+                                            <th>Enlaces Detectados</th>
+                                            <th>Acción Recomendada</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Dynamic rows -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Tab: Cookies & Trackers -->
+                        <div class="tab-pane" id="tab-cookies">
+                            <div class="pane-header">
+                                <i data-lucide="cookie" class="pane-icon text-danger"></i>
+                                <div>
+                                    <h4>Cookies de Terceros y Rastreadores Analíticos</h4>
+                                    <p>Las cookies que analizan el comportamiento, perfilamiento o marketing de los usuarios requieren de un banner de consentimiento donde se pueda aceptar/rechazar selectivamente.</p>
+                                </div>
+                            </div>
+                            <div class="table-container">
+                                <table id="cookies-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Rastreador</th>
+                                            <th>Categoría</th>
+                                            <th>Tipo</th>
+                                            <th>Detalle de Origen</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Dynamic rows -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="banner-status-box" id="banner-status-box-val">
+                                <!-- Banner status -->
+                            </div>
+                        </div>
+
+                        <!-- Tab: Security Headers -->
+                        <div class="tab-pane" id="tab-security">
+                            <div class="pane-header">
+                                <i data-lucide="shield-check" class="pane-icon text-success"></i>
+                                <div>
+                                    <h4>Cabeceras de Seguridad HTTP</h4>
+                                    <p>Art. 3, letra f (Principio de Seguridad): Se deben garantizar estándares adecuados de seguridad, protegiendo contra filtraciones, hackeos y accesos no autorizados.</p>
+                                </div>
+                            </div>
+                            <div class="headers-status-grid" id="headers-status-grid-val">
+                                <!-- Headers status items -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actionable Deductions / Recommendations -->
+                    <div class="recommendations-box">
+                        <h3><i data-lucide="check-square"></i> Acciones Requeridas para Cumplir</h3>
+                        <div id="recommendations-list">
+                            <!-- Recommendations items -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: Resources Generator -->
+            <section id="resources-tab" class="tab-content">
+                <div class="welcome-banner">
+                    <div class="welcome-text">
+                        <h1>Generador de Recursos Ley 21.719</h1>
+                        <p>Herramientas para solucionar de forma rápida las brechas de cumplimiento más comunes detectadas en tu sitio web.</p>
+                    </div>
+                </div>
+
+                <div class="grid-layout">
+                    <!-- Privacy Policy Builder -->
+                    <div class="card">
+                        <h3><i data-lucide="file-signature"></i> Plantilla de Política de Privacidad</h3>
+                        <p class="card-desc">Genera una política adaptada al Art. 14 ter de la nueva ley, detallando derechos ARCOP y la fiscalización de la APDP.</p>
+                        
+                        <form id="policy-form" class="policy-form">
+                            <div class="form-group">
+                                <label for="comp-name">Nombre de la Empresa / Responsable de Datos</label>
+                                <input type="text" id="comp-name" placeholder="ej: SDAI Chile S.A." required>
+                            </div>
+                            <div class="form-group">
+                                <label for="comp-email">Correo Electrónico para Ejercer Derechos</label>
+                                <input type="email" id="comp-email" placeholder="ej: privacidad@sdaichile.com" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="comp-address">Domicilio Físico</label>
+                                <input type="text" id="comp-address" placeholder="ej: Av. Providencia 1234, Santiago" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Generar Política</button>
+                        </form>
+
+                        <div class="result-text-area hidden" id="policy-result-box">
+                            <div class="textarea-header">
+                                <span>Código / Texto Generado:</span>
+                                <button class="btn btn-outline btn-sm" id="copy-policy-btn"><i data-lucide="copy"></i> Copiar</button>
+                            </div>
+                            <textarea id="policy-text" readonly rows="12"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Cookie Consent Snippet Builder -->
+                    <div class="card">
+                        <h3><i data-lucide="cookie"></i> Generador de Banner de Consentimiento de Cookies</h3>
+                        <p class="card-desc">Código HTML/CSS/JS autocontenido que puedes añadir a tu sitio web. Ofrece un banner estético con opción de aceptación granular de cookies.</p>
+                        
+                        <div class="form-group">
+                            <label>Esquema de Color</label>
+                            <select id="banner-theme" class="form-control">
+                                <option value="dark">Modo Oscuro (Slate / Cyan)</option>
+                                <option value="light">Modo Claro (Gris / Azul)</option>
+                            </select>
+                        </div>
+                        <button type="button" id="generate-banner-btn" class="btn btn-primary">Generar Snippet de Banner</button>
+
+                        <div class="result-text-area hidden" id="banner-result-box">
+                            <div class="textarea-header">
+                                <span>Snippet HTML/JS (Pégalo al final de tu &lt;body&gt;):</span>
+                                <button class="btn btn-outline btn-sm" id="copy-banner-btn"><i data-lucide="copy"></i> Copiar</button>
+                            </div>
+                            <pre><code id="banner-code"></code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: Law Guide -->
+            <section id="law-tab" class="tab-content">
+                <div class="welcome-banner">
+                    <div class="welcome-text">
+                        <h1>Guía de Cumplimiento Ley N° 21.719</h1>
+                        <p>Resumen técnico e interpretaciones clave sobre la reforma que regula la protección de datos personales y crea la Agencia de Protección de Datos Personales (APDP).</p>
+                    </div>
+                </div>
+
+                <div class="law-articles">
+                    <div class="card article-card">
+                        <div class="article-badge">Definición</div>
+                        <h3>Consentimiento del Titular (Art. 12)</h3>
+                        <p>El tratamiento de datos personales solo es lícito si se cuenta con el consentimiento libre, específico, previo e inequívoco del usuario, otorgado mediante una declaración o una <strong>clara acción afirmativa</strong>. 
+                        No se permiten casillas pre-marcadas por defecto para consentimientos de tratamientos no esenciales.</p>
+                    </div>
+
+                    <div class="card article-card">
+                        <div class="article-badge">Derecho</div>
+                        <h3>Derechos ARCOP (Arts. 5, 6, 7, 8, 8 ter, 9)</h3>
+                        <p>Los titulares tienen derechos irrenunciables que las empresas deben facilitar mediante medios electrónicos sencillos:</p>
+                        <ul>
+                            <li><strong>Acceso:</strong> Saber qué datos se tratan, origen y finalidades.</li>
+                            <li><strong>Rectificación:</strong> Corregir información inexacta o desactualizada.</li>
+                            <li><strong>Supresión (Derecho al Olvido):</strong> Eliminar datos cuando ya no sean necesarios o se revoque el consentimiento.</li>
+                            <li><strong>Oposición:</strong> Negarse a un tratamiento específico (por ejemplo, marketing directo).</li>
+                            <li><strong>Bloqueo:</strong> Suspender temporalmente el tratamiento durante reclamaciones.</li>
+                            <li><strong>Portabilidad:</strong> Solicitar copia en un formato estructurado y de uso común.</li>
+                        </ul>
+                    </div>
+
+                    <div class="card article-card">
+                        <div class="article-badge">Obligación</div>
+                        <h3>Deber de Información y Transparencia (Art. 14 ter)</h3>
+                        <p>Toda organización debe tener una política de privacidad en su sitio web indicando:</p>
+                        <ul>
+                            <li>Identidad y contacto del responsable (y del DPO si existe).</li>
+                            <li>Finalidades específicas del tratamiento de los datos.</li>
+                            <li>Medios para ejercer los derechos ARCOP.</li>
+                            <li>Plazos de retención e información sobre transferencias internacionales.</li>
+                        </ul>
+                    </div>
+
+                    <div class="card article-card">
+                        <div class="article-badge text-danger">Multas</div>
+                        <h3>Régimen Sancionatorio (Art. 35)</h3>
+                        <p>Las infracciones se clasifican y conllevan multas severas aplicadas por la APDP:</p>
+                        <ul>
+                            <li><strong>Leves:</strong> Amonestación escrita o multa de hasta <strong>5.000 UTM</strong>.</li>
+                            <li><strong>Graves:</strong> Multa de hasta <strong>10.000 UTM</strong>.</li>
+                            <li><strong>Gravísimas:</strong> Multa de hasta <strong>20.000 UTM</strong>.</li>
+                            <li><strong>Reincidencia:</strong> Para grandes empresas, puede alcanzar hasta el <strong>2%</strong> (graves) o <strong>4%</strong> (gravísimas) de sus ventas anuales.</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Script JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>
