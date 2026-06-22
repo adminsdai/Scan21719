@@ -1157,6 +1157,10 @@ tr:last-child td {
         grid-template-columns: 1fr;
     }
     
+    .app-layout > * {
+        min-width: 0;
+    }
+    
     .sidebar {
         border-right: none;
         border-bottom: 1px solid var(--card-border);
@@ -1188,10 +1192,14 @@ tr:last-child td {
         display: none;
     }
 
-    .sidebar > div[style*="text-align: center"] {
+    .sidebar-footer > div[style*="text-align: center"] {
         flex-direction: row !important;
         flex-wrap: wrap;
         justify-content: center;
+    }
+
+    .sidebar-footer {
+        margin-top: 15px;
     }
 
     .welcome-text h1 {
