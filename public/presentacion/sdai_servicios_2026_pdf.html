@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDAI Chile — Servicios Profesionales 2026 · PDF</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ═══════════════════════════════════════════════════
+           TOKENS
+        ═══════════════════════════════════════════════════ */
+        :root {
+            --bg:       #0a0e1a;
+            --bg2:      #101827;
+            --cyan:     #22d3ee;
+            --teal:     #14b8a6;
+            --gold:     #f59e0b;
+            --purple:   #a78bfa;
+            --rose:     #f43f5e;
+            --white:    #f1f5f9;
+            --muted:    #94a3b8;
+            --dimmed:   #64748b;
+            --border:   rgba(148,163,184,0.15);
+            --glass:    rgba(15,23,42,0.7);
+            --heading:  'Plus Jakarta Sans', sans-serif;
+            --body:     'Inter', sans-serif;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           RESET
+        ═══════════════════════════════════════════════════ */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: #0d1117;
+            font-family: var(--body);
+            color: var(--white);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           PAGE — A4 landscape = 297mm × 210mm
+        ═══════════════════════════════════════════════════ */
+        .page {
+            width: 297mm;
+            height: 210mm;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto 8mm;
+            page-break-after: always;
+            break-after: page;
+        }
+
+        /* Background grid */
+        .page::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(34,211,238,0.025) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(34,211,238,0.025) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: 0;
+        }
+
+        /* Orb decorations */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.12;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .orb-cyan  { background: var(--cyan);   width: 280px; height: 280px; top: -80px;  left: -60px; }
+        .orb-purple{ background: var(--purple); width: 220px; height: 220px; bottom: -60px; right: -40px; }
+        .orb-gold  { background: var(--gold);   width: 200px; height: 200px; bottom: -50px; left: 30%; }
+
+        /* Content container */
+        .page-inner {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 14mm 18mm 10mm;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           HEADER BAR (top of every page)
+        ═══════════════════════════════════════════════════ */
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8mm;
+            padding-bottom: 3mm;
+            border-bottom: 1px solid var(--border);
+        }
+        .page-brand {
+            font-family: var(--heading);
+            font-size: 9pt;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--cyan);
+        }
+        .page-label {
+            font-size: 7.5pt;
+            color: var(--dimmed);
+            font-family: var(--heading);
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .page-num {
+            font-family: var(--heading);
+            font-size: 8pt;
+            color: var(--dimmed);
+        }
+        .page-num span { color: var(--cyan); font-weight: 700; }
+
+        /* ═══════════════════════════════════════════════════
+           TYPOGRAPHY
+        ═══════════════════════════════════════════════════ */
+        .slide-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 7pt;
+            font-weight: 700;
+            letter-spacing: 1.8px;
+            text-transform: uppercase;
+            color: var(--cyan);
+            margin-bottom: 4mm;
+        }
+        .slide-tag::before {
+            content: '';
+            width: 16px;
+            height: 2px;
+            background: var(--cyan);
+            flex-shrink: 0;
+        }
+
+        h1 {
+            font-family: var(--heading);
+            font-size: 26pt;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+            margin-bottom: 4mm;
+        }
+        h2 {
+            font-family: var(--heading);
+            font-size: 14pt;
+            font-weight: 800;
+            margin-bottom: 3mm;
+        }
+        .subtitle {
+            font-size: 9.5pt;
+            color: var(--muted);
+            line-height: 1.65;
+            margin-bottom: 5mm;
+            max-width: 140mm;
+        }
+
+        /* Gradient texts */
+        .g-cyan   { background: linear-gradient(135deg, var(--cyan), var(--teal));     -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .g-gold   { background: linear-gradient(135deg, var(--gold), #fbbf24);         -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .g-purple { background: linear-gradient(135deg, var(--purple), #c084fc);       -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .g-rose   { background: linear-gradient(135deg, var(--rose), #fb7185);         -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+        /* ═══════════════════════════════════════════════════
+           LAYOUT HELPERS
+        ═══════════════════════════════════════════════════ */
+        .split { display: grid; gap: 10mm; align-items: start; flex: 1; }
+        .split-50  { grid-template-columns: 1fr 1fr; }
+        .split-60  { grid-template-columns: 1.5fr 1fr; }
+        .split-40  { grid-template-columns: 1fr 1.5fr; }
+
+        /* ═══════════════════════════════════════════════════
+           CARDS
+        ═══════════════════════════════════════════════════ */
+        .grid { display: grid; gap: 4mm; }
+        .grid-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+        .card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 5mm 5mm;
+            backdrop-filter: blur(8px);
+        }
+        .card.top-cyan   { border-top: 2.5px solid var(--cyan);   }
+        .card.top-teal   { border-top: 2.5px solid var(--teal);   }
+        .card.top-gold   { border-top: 2.5px solid var(--gold);   }
+        .card.top-purple { border-top: 2.5px solid var(--purple); }
+        .card.top-rose   { border-top: 2.5px solid var(--rose);   }
+
+        .card .icon { font-size: 16pt; margin-bottom: 2mm; display: block; }
+        .card h3 { font-family: var(--heading); font-size: 8.5pt; font-weight: 700; margin-bottom: 1.5mm; color: var(--white); }
+        .card p  { font-size: 7.5pt; color: var(--muted); line-height: 1.55; }
+
+        /* ═══════════════════════════════════════════════════
+           TIMELINE
+        ═══════════════════════════════════════════════════ */
+        .timeline { position: relative; padding-left: 8mm; }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 3mm;
+            top: 2mm;
+            bottom: 2mm;
+            width: 1.5px;
+            background: linear-gradient(to bottom, var(--cyan), var(--purple));
+            border-radius: 2px;
+        }
+        .tl-item { position: relative; margin-bottom: 3.5mm; }
+        .tl-item::before {
+            content: '';
+            position: absolute;
+            left: -5.5mm;
+            top: 3px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--cyan);
+            border: 2px solid var(--bg);
+            box-shadow: 0 0 6px rgba(34,211,238,0.5);
+        }
+        .tl-item h4 { font-family: var(--heading); font-size: 8pt; font-weight: 700; margin-bottom: 1mm; }
+        .tl-item p  { font-size: 7.5pt; color: var(--muted); line-height: 1.5; }
+
+        /* ═══════════════════════════════════════════════════
+           CHECK LIST
+        ═══════════════════════════════════════════════════ */
+        .check-list { list-style: none; margin-top: 2mm; }
+        .check-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+            padding: 2mm 0;
+            font-size: 8.5pt;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+        .check-list li::before {
+            content: '✓';
+            flex-shrink: 0;
+            color: var(--cyan);
+            font-weight: 700;
+            font-size: 9pt;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           STAT BOXES
+        ═══════════════════════════════════════════════════ */
+        .stats-row { display: flex; gap: 4mm; margin-top: 5mm; }
+        .stat-box {
+            flex: 1;
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 4mm 5mm;
+            text-align: center;
+        }
+        .stat-num {
+            font-family: var(--heading);
+            font-size: 18pt;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--cyan), var(--teal));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1;
+        }
+        .stat-label {
+            font-size: 6.5pt;
+            color: var(--dimmed);
+            margin-top: 1.5mm;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           PILL
+        ═══════════════════════════════════════════════════ */
+        .pill {
+            display: inline-block;
+            padding: 1.5mm 3.5mm;
+            border-radius: 20px;
+            font-size: 6pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1.5mm;
+        }
+        .pill-cyan   { background: rgba(34,211,238,0.12);  color: var(--cyan);   }
+        .pill-gold   { background: rgba(245,158,11,0.12);  color: var(--gold);   }
+        .pill-purple { background: rgba(167,139,250,0.12); color: var(--purple); }
+        .pill-teal   { background: rgba(20,184,166,0.12);  color: var(--teal);   }
+
+        /* ═══════════════════════════════════════════════════
+           HERO (slide 1)
+        ═══════════════════════════════════════════════════ */
+        .hero-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            flex: 1;
+            justify-content: center;
+        }
+        .hero-logo {
+            font-family: var(--heading);
+            font-size: 10pt;
+            font-weight: 800;
+            letter-spacing: 4px;
+            color: var(--cyan);
+            margin-bottom: 4mm;
+        }
+        .hero-divider {
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--cyan), transparent);
+            border-radius: 2px;
+            margin: 4mm auto 0;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           CTA BOX (slide 10)
+        ═══════════════════════════════════════════════════ */
+        .cta-box {
+            background: linear-gradient(135deg, rgba(34,211,238,0.07), rgba(20,184,166,0.07));
+            border: 1px solid rgba(34,211,238,0.2);
+            border-radius: 12px;
+            padding: 6mm 10mm;
+            text-align: center;
+            max-width: 160mm;
+            margin: 0 auto;
+        }
+        .cta-contacts {
+            display: flex;
+            gap: 8mm;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 4mm;
+        }
+        .cta-item {
+            font-size: 8.5pt;
+            color: var(--cyan);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           IMAGE PLACEHOLDER
+        ═══════════════════════════════════════════════════ */
+        .img-side {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .img-side img {
+            width: 100%;
+            max-width: 75mm;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        /* ═══════════════════════════════════════════════════
+           FOOTER BAR (bottom of every page)
+        ═══════════════════════════════════════════════════ */
+        .page-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 3mm 18mm;
+            border-top: 1px solid var(--border);
+            background: rgba(10,14,26,0.8);
+            z-index: 2;
+        }
+        .footer-brand {
+            font-family: var(--heading);
+            font-size: 6.5pt;
+            color: var(--dimmed);
+            letter-spacing: 1px;
+        }
+        .footer-url { font-size: 6.5pt; color: var(--cyan); font-weight: 600; }
+        .footer-right { font-size: 6.5pt; color: var(--dimmed); }
+
+        /* ═══════════════════════════════════════════════════
+           PRINT STYLES
+        ═══════════════════════════════════════════════════ */
+        @media print {
+            body { background: #0a0e1a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .page { margin: 0; box-shadow: none; }
+            .no-print { display: none !important; }
+        }
+
+        /* Screen preview toolbar */
+        .toolbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            background: rgba(10,14,26,0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(34,211,238,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 30px;
+            font-family: var(--heading);
+        }
+        .toolbar-brand {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--cyan);
+            letter-spacing: 2px;
+        }
+        .toolbar-info {
+            font-size: 11px;
+            color: var(--muted);
+        }
+        .btn-print {
+            background: linear-gradient(135deg, var(--cyan), var(--teal));
+            color: #0a0e1a;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 20px;
+            font-family: var(--heading);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: opacity 0.2s;
+        }
+        .btn-print:hover { opacity: 0.85; }
+
+        @media screen {
+            body { padding-top: 54px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ── Toolbar (screen only) ── -->
+<div class="toolbar no-print">
+    <div class="toolbar-brand">SDAI CHILE · PDF Preview</div>
+    <div class="toolbar-info">10 páginas · A4 Horizontal · Ctrl+P → Guardar como PDF</div>
+    <button class="btn-print" onclick="window.print()">🖨️ Exportar PDF</button>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PÁGINA 1 — PORTADA
+════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="orb orb-cyan"></div>
+    <div class="orb orb-purple"></div>
+    <div class="page-inner">
+        <div class="page-header">
+            <div class="page-brand">SDAI CHILE</div>
+            <div class="page-label">Servicios Profesionales 2026</div>
+            <div class="page-num"><span>01</span> / 10</div>
+        </div>
+        <div class="hero-center">
+            <div class="hero-logo">SDAI CHILE</div>
+            <div class="slide-tag" style="justify-content:center;">Servicios Profesionales 2026</div>
+            <h1 style="font-size:32pt; margin-bottom:5mm;">
+                Protección de Datos,<br>
+                <span class="g-cyan">Gobernanza Inteligente</span><br>
+                e IA para su Organización
+            </h1>
+            <p class="subtitle" style="max-width:180mm; text-align:center; font-size:10.5pt;">
+                Habilitamos a empresas públicas y privadas para cumplir con la Ley 21.719, implementar marcos de gobernanza de datos DMBOK2 y adoptar inteligencia artificial de forma segura, ética y agnóstica.
+            </p>
+            <div class="stats-row" style="margin-top:6mm; justify-content:center;">
+                <div class="stat-box" style="min-width:45mm;">
+                    <div class="stat-num">21.719</div>
+                    <div class="stat-label">Ley de Protección de Datos</div>
+                </div>
+                <div class="stat-box" style="min-width:45mm;">
+                    <div class="stat-num">DMBOK2</div>
+                    <div class="stat-label">Gobernanza de Datos</div>
+                </div>
+                <div class="stat-box" style="min-width:45mm;">
+                    <div class="stat-num">IA</div>
+                    <div class="stat-label">Inteligencia Artificial Agnóstica</div>
+                </div>
+            </div>
+            <div class="hero-divider"></div>
+        </div>
+    </div>
+    <div class="page-footer">
+        <div class="footer-brand">SDAI CHILE — Servicios de Datos, Analítica e Inteligencia</div>
+        <div class="footer-url">sdaichile.com</div>
+        <div class="footer-right">© 2026 Todos los derechos reservados</div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PÁGINA 2 — QUIÉNES SOMOS
+════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="orb orb-cyan"></div>
+    <div class="orb orb-purple"></div>
+    <div class="page-inner">
+        <div class="page-header">
+            <div class="page-brand">SDAI CHILE</div>
+            <div class="page-label">Acerca de Nosotros</div>
+            <div class="page-num"><span>02</span> / 10</div>
+        </div>
+        <div class="split split-60" style="flex:1;">
+            <div>
+                <div class="slide-tag">Acerca de nosotros</div>
+                <h1>¿Quiénes somos?</h1>
+                <p class="subtitle">
+                    <strong style="color:var(--white);">SDAI Chile</strong> (Servicios de Datos, Analítica e Inteligencia) es una consultora especializada en la intersección entre la gobernanza de datos, la regulación y la tecnología. Ayudamos a organizaciones a transformar sus datos en activos estratégicos protegidos y utilizables.
+                </p>
+                <ul class="check-list">
+                    <li>Equipo multidisciplinario: legal, tecnológico y de gestión</li>
+                    <li>Enfoque práctico: diagnóstico, implementación y acompañamiento continuo</li>
+                    <li>Experiencia en sector público y privado en Chile y LATAM</li>
+                    <li>Partners tecnológicos agnósticos: no vendemos software, vendemos soluciones</li>
+                </ul>
+            </div>
+            <div class="img-side">
+                <img src="img/hero_shield.png" alt="SDAI Shield">
+            </div>
+        </div>
+    </div>
+    <div class="page-footer">
+        <div class="footer-brand">SDAI CHILE — Servicios de Datos, Analítica e Inteligencia</div>
+        <div class="footer-url">sdaichile.com</div>
+        <div class="footer-right">© 2026 Todos los derechos reservados</div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PÁGINA 3 — CONTEXTO REGULATORIO
+════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="orb orb-cyan"></div>
+    <div class="orb orb-gold"></div>
+    <div class="page-inner">
+        <div class="page-header">
+            <div class="page-brand">SDAI CHILE</div>
+            <div class="page-label">Contexto Regulatorio</div>
+            <div class="page-num"><span>03</span> / 10</div>
+        </div>
+        <div class="slide-tag">Contexto Regulatorio</div>
+        <h1>Ley 21.719: <span class="g-rose">Nueva Era</span> de<br>Protección de Datos en Chile</h1>
+        <p class="subtitle">A partir del <strong style="color:var(--white);">1 de diciembre de 2026</strong>, Chile exigirá cumplimiento total con su nueva ley de protección de datos personales, alineada con estándares internacionales como el GDPR europeo.</p>
+        <div class="grid grid-4" style="flex:1;">
+            <div class="card top-cyan">
+                <span class="icon">📋</span>
+                <h3>Consentimiento Expreso</h3>
+                <p>Art. 12: Todo tratamiento de datos requiere autorización previa, libre, informada e inequívoca del titular.</p>
+            </div>
+            <div class="card top-gold">
+                <span class="icon">📜</span>
+                <h3>Políticas Públicas</h3>
+                <p>Art. 14 ter: Obligación de publicar y mantener accesible la política de tratamiento de datos personales.</p>
+            </div>
+            <div class="card top-purple">
+                <span class="icon">⏱️</span>
+                <h3>Proporcionalidad</h3>
+                <p>Art. 3c: Los datos solo pueden conservarse durante el período necesario para cumplir su finalidad declarada.</p>
+            </div>
+            <div class="card top-rose">
+                <span class="icon">🛡️</span>
+                <h3>Principio de Seguridad</h3>
+                <p>Art. 3f: Medidas técnicas y organizativas para proteger datos contra accesos no autorizados o filtraciones.</p>
+            </div>
+        </div>
+    </div>
+    <div class="page-footer">
+        <div class="footer-brand">SDAI CHILE — Servicios de Datos, Analítica e Inteligencia</div>
+        <div class="footer-url">sdaichile.com</div>
+        <div class="footer-right">© 2026 Todos los derechos reservados</div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PÁGINA 4 — SERVICIO 01: LEY 21.719
+════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="orb orb-cyan"></div>
+    <div class="orb orb-purple"></div>
+    <div class="page-inner">
+        <div class="page-header">
+            <div class="page-brand">SDAI CHILE</div>
+            <div class="page-label">Servicio 01</div>
+            <div class="page-num"><span>04</span> / 10</div>
+        </div>
+        <div class="split split-40" style="flex:1; align-items:center;">
+            <div class="img-side">
+                <img src="img/compliance_legal.png" alt="Compliance">
+            </div>
+            <div>
+                <div class="slide-tag">Servicio 01</div>
+                <h1>Cumplimiento<br><span class="g-cyan">Ley 21.719</span></h1>
+                <p class="subtitle">Programa integral de adecuación normativa para que su organización cumpla con la nueva ley de protección de datos personales antes de su entrada en vigencia.</p>
+                <div class="grid grid-2">
+                    <div class="card top-cyan">
+                        <h3>🔍 Diagnóstico de Brechas</h3>
+                        <p>Escaneo automatizado de sitios web + auditoría legal de procesos de recolección de datos.</p>
+                    </div>
+                    <div class="card top-teal">
+                        <h3>📝 Políticas y Documentos</h3>
+                        <p>Redacción de Políticas de Privacidad, formularios de consentimiento y Evaluación de Impacto (ENIA).</p>
+                    </div>
+                    <div class="card top-gold">
+                        <h3>🍪 Banners y Consentimiento</h3>
+                        <p>Implementación de banners de cookies, opt-in granular y gestión de preferencias del usuario.</p>
+                    </div>
+                    <div class="card top-purple">
+                        <h3>📊 Monitoreo Continuo</h3>
+                        <p>Dashboard de cumplimiento con escaneo periódico, alertas de incumplimiento y reportes ejecutivos.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-footer">
+        <div class="footer-brand">SDAI CHILE — Servicios de Datos, Analítica e Inteligencia</div>
+        <div class="footer-url">sdaichile.com</div>
+        <div class="footer-right">© 2026 Todos los derechos reservados</div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PÁGINA 5 — SERVICIO 02: DMBOK2
+════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="orb orb-cyan"></div>
+    <div class="orb orb-gold"></div>
+    <div class="page-inner">
+        <div class="page-header">
+            <div class="page-brand">SDAI CHILE</div>
+            <div class="page-label">Servicio 02</div>
+            <div class="page-num"><span>05</span> / 10</div>
+        </div>
+        <div class="split split-60" style="flex:1; align-items:start;">
+            <div>
+                <div class="slide-tag">Servicio 02</div>
+                <h1>Gobernanza de Datos<br><span class="g-gold">DMA / DMBOK2</span></h1>
+                <p class="subtitle">Implementamos el marco de referencia DAMA-DMBOK2 para establecer una gobernanza de datos robusta que maximice el valor de sus activos de información.</p>
+                <div class="timeline">
+                    <div class="tl-item">
+                        <h4>📐 Arquitectura de Datos</h4>
+                        <p>Diseño de modelos conceptuales, lógicos y físicos alineados con los objetivos del negocio.</p>
+                    </div>
+                    <div class="tl-item">
+                        <h4>🏷️ Gestión de Metadatos</h4>
+                        <p>Catálogo de datos empresarial, linaje, diccionarios de datos y trazabilidad de activos.</p>
+                    </div>
+                    <div class="tl-item">
+                        <h4>🎯 Calidad de Datos</h4>
+                        <p>Perfilamiento, reglas de validación, scorecards de calidad y procesos de limpieza automatizada.</p>
+                    </div>
+                    <div class="tl-item">
+                        <h4>🔒 Seguridad y Privacidad de Datos</h4>
+                        <p>Clasificación de datos, controles de acceso, cifrado y políticas de retención según Ley 21.719.</p>
+                    </div>
+                    <div class="tl-item">
+                        <h4>📊 Master Data Management (MDM)</h4>
+                        <p>Definición de datos maestros, golden records y procesos de matching/merging de registros.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="img-side" style="align-self:center;">
+                <img src="img/data_governance.png" alt="Data Governance">
+            </div>
+        </div>
+    </div>
+    <div class="page-footer">
+        <div class="footer-brand">SDAI CHILE — Servicios de Datos, Analítica e Inteligencia</div>
+        <div class="footer-url">sdaichile.com</div>
+        <div class="footer-right">© 2026 Todos los derechos reservados</div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PÁGINA 6 — SERVICIO 03: IA AGNÓSTICA
+════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="orb orb-purple" style="top:-80px; left:40%; opacity:0.15;"></div>
+    <div class="orb orb-cyan"></div>
+    <div class="page-inner">
+        <div class="page-header">
+            <div class="page-brand">SDAI CHILE</div>
+            <div class="page-label">Servicio 03</div>
+            <div class="page-num"><span>06</span> / 10</div>
+        </div>
+        <div class="split split-40" style="flex:1; align-items:center;">
+            <div class="img-side">
+                <img src="img/ai_brain.png" alt="AI Brain">
+            </div>
+            <div>
+                <div class="slide-tag">Servicio 03</div>
+                <h1>Inteligencia Artificial<br><span class="g-purple">Agnóstica</span></h1>
+                <p class="subtitle">Diseñamos e implementamos soluciones de IA sin dependencia de un solo proveedor. Nuestro enfoque agnóstico garantiza la mejor tecnología para cada caso de uso.</p>
+                <div class="grid grid-2">
+                    <div class="card top-purple">
+                        <h3>🤖 Automatización Inteligente</h3>
+                        <p>Agentes de IA para clasificación de documentos, atención al público y análisis de contratos regulatorios.</p>
+                    </div>
+                    <div class="card top-cyan">
+                        <h3>📈 Analítica Avanzada</h3>
+                        <p>Modelos predictivos, NLP para extracción de entidades y detección de patrones anómalos en datos.</p>
+                    </div>
+                    <div class="card top-gold">
+                        <h3>🧠 IA Responsable</h3>
+                        <p>Evaluaciones de sesgo, explicabilidad de modelos (XAI) y cumplimiento ético según estándares internacionales.</p>
+                    </div>
+                    <div class="card top-teal">
+                        <h3>☁️ Multi-Cloud / On-Prem</h3>
+                        <p>Despliegue en Azure, AWS, GCP u on-premise. Sin lock-in. Orquestación con herramientas open source.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="page-footer">
+        <div class="footer-brand">SDAI CHILE — Servicios de Datos, Analítica e Inteligencia</div>
+        <div class="footer-url">sdaichile.com</div>
+        <div class="footer-right">© 2026 Todos los derechos reservados</div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PÁGINA 7 — METODOLOGÍA
+════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="orb orb-cyan"></div>
+    <div class="orb orb-purple"></div>
+    <div class="page-inner">
+        <div class="page-header">
+            <div class="page-brand">SDAI CHILE</div>
+            <div class="page-label">Nuestra Metodología</div>
+            <div class="page-num"><span>07</span> / 10</div>
+        </div>
+        <div style="text-align:center; margin-bottom:6mm;">
+            <div class="slide-tag" style="justify-content:center;">Nuestra Metodología</div>
+            <h1>Enfoque en <span class="g-cyan">4 Fases</span></h1>
+            <p class="subtitle" style="text-align:center; margin:0 auto; max-width:200mm;">Un proceso estructurado y probado que asegura resultados medibles en cada etapa del proyecto.</p>
+        </div>
+        <div class="grid grid-4" style="flex:1;">
+            <div class="card top-cyan" style="text-align:center;">
+                <span class="icon">🔍</span>
+                <div class="pill pill-cyan">Fase 1</div>
+                <h3 style="margin-top:2mm;">Diagnóstico</h3>
+                <p>Levantamiento del estado actual: procesos, tecnología, madurez de datos y brechas regulatorias identificadas.</p>
+            </div>
+            <div class="card top-gold" style="text-align:center;">
+                <span class="icon">📐</span>
+                <div class="pill pill-gold">Fase 2</div>
+                <h3 style="margin-top:2mm;">Diseño</h3>
+                <p>Hoja de ruta priorizada, arquitectura objetivo, políticas y plan de gobierno de datos adaptado al negocio.</p>
+            </div>
+            <div class="card top-purple" style="text-align:center;">
+                <span class="icon">⚙️</span>
+                <div class="pill pill-purple">Fase 3</div>
+                <h3 style="margin-top:2mm;">Implementación</h3>
+                <p>Despliegue de herramientas, capacitación del equipo, automatización de procesos y puesta en producción.</p>
+            </div>
+            <div class="card top-teal" style="text-align:center;">
+                <span class="icon">📊</span>
+                <div class="pill pill-teal">Fase 4</div>
+                <h3 style="margin-top:2mm;">Evolución</h3>
+                <p>Monitoreo continuo, métricas de cumplimiento, mejora iterativa y acompañamiento permanente del cliente.</p>
+            </div>
+        </div>
+    </div>
+    <div class="page-footer">
+        <div class="footer-brand">SDAI CHILE — Servicios de Datos, Analítica e Inteligencia</div>
+        <div class="footer-url">sdaichile.com</div>
+        <div class="footer-right">© 2026 Todos los derechos reservados</div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PÁGINA 8 — SECTORES
+════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="orb orb-cyan"></div>
+    <div class="orb orb-gold"></div>
+    <div class="page-inner">
+        <div class="page-header">
+            <div class="page-brand">SDAI CHILE</div>
+            <div class="page-label">Nuestro Alcance</div>
+            <div class="page-num"><span>08</span> / 10</div>
+        </div>
+        <div style="text-align:center; margin-bottom:5mm;">
+            <div class="slide-tag" style="justify-content:center;">Nuestro Alcance</div>
+            <h1>Sector <span class="g-cyan">Público</span> y <span class="g-gold">Privado</span></h1>
+            <p class="subtitle" style="text-align:center; margin:0 auto;">Adaptamos nuestras soluciones a las necesidades específicas de cada industria y tipo de organización.</p>
+        </div>
+        <div class="grid grid-3" style="flex:1;">
+            <div class="card top-cyan">
+                <span class="icon">🏛️</span>
+                <h3>Gobierno y Municipalidades</h3>
+                <p>Cumplimiento Ley 21.719 en plataformas ciudadanas, portales de transparencia y servicios digitales del Estado.</p>
+            </div>
+            <div class="card top-gold">
+                <span class="icon">🏥</span>
+                <h3>Salud</h3>
+                <p>Protección de datos sensibles de pacientes, HCE, telemedicina y cumplimiento de estándares HL7/FHIR.</p>
+            </div>
+            <div class="card top-purple">
+                <span class="icon">🏦</span>
+                <h3>Banca y Finanzas</h3>
+                <p>Gobernanza de datos financieros, prevención de fraude con IA, reportes regulatorios y gestión de riesgo.</p>
+            </div>
+            <div class="card top-rose">
+                <span class="icon">🎓</span>
+                <h3>Educación</h3>
+                <p>Protección de datos de estudiantes menores de edad, plataformas LMS y analítica educativa responsable.</p>
+            </div>
+            <div class="card top-teal">
+                <span class="icon">🛒</span>
+                <h3>Retail y E-Commerce</h3>
+                <p>Consentimiento de cookies, perfilamiento de clientes compatible con la ley, y personalización ética con IA.</p>
+            </div>
+            <div class="card top-cyan">
+                <span class="icon">⚡</span>
+                <h3>Energía y Minería</h3>
+                <p>Gestión de datos de campo, IoT industrial, calidad de datos operacionales y compliance ambiental-datos.</p>
+            </div>
+        </div>
+    </div>
+    <div class="page-footer">
+        <div class="footer-brand">SDAI CHILE — Servicios de Datos, Analítica e Inteligencia</div>
+        <div class="footer-url">sdaichile.com</div>
+        <div class="footer-right">© 2026 Todos los derechos reservados</div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PÁGINA 9 — DIFERENCIADORES
+════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="orb orb-cyan"></div>
+    <div class="orb orb-purple"></div>
+    <div class="page-inner">
+        <div class="page-header">
+            <div class="page-brand">SDAI CHILE</div>
+            <div class="page-label">¿Por qué SDAI?</div>
+            <div class="page-num"><span>09</span> / 10</div>
+        </div>
+        <div style="text-align:center; margin-bottom:5mm;">
+            <div class="slide-tag" style="justify-content:center;">¿Por qué SDAI?</div>
+            <h1>Nuestro <span class="g-cyan">Diferencial</span></h1>
+        </div>
+        <div class="grid grid-3" style="margin-bottom:5mm;">
+            <div class="card top-cyan" style="text-align:center;">
+                <span class="icon">🔓</span>
+                <h3>Agnósticos por Convicción</h3>
+                <p>No representamos ni vendemos software. Recomendamos la mejor herramienta para su contexto, sin conflictos de interés.</p>
+            </div>
+            <div class="card top-gold" style="text-align:center;">
+                <span class="icon">🇨🇱</span>
+                <h3>Expertise Local, Visión Global</h3>
+                <p>Profundo conocimiento de la legislación chilena y experiencia práctica con marcos internacionales (GDPR, LGPD, CCPA).</p>
+            </div>
+            <div class="card top-purple" style="text-align:center;">
+                <span class="icon">🛠️</span>
+                <h3>Herramientas Propias</h3>
+                <p>Desarrollamos el Escáner de Cumplimiento Ley 21.719 para diagnóstico automatizado y monitoreo continuo.</p>
+            </div>
+        </div>
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-num">360°</div>
+                <div class="stat-label">Visión integral</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-num">24/7</div>
+                <div class="stat-label">Monitoreo continuo</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-num">100%</div>
+                <div class="stat-label">Independiente</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-num">LATAM</div>
+                <div class="stat-label">Cobertura regional</div>
+            </div>
+        </div>
+    </div>
+    <div class="page-footer">
+        <div class="footer-brand">SDAI CHILE — Servicios de Datos, Analítica e Inteligencia</div>
+        <div class="footer-url">sdaichile.com</div>
+        <div class="footer-right">© 2026 Todos los derechos reservados</div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════
+     PÁGINA 10 — CONTACTO / CTA
+════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="orb orb-cyan"></div>
+    <div class="orb orb-purple"></div>
+    <div class="orb orb-gold" style="opacity:0.08;"></div>
+    <div class="page-inner">
+        <div class="page-header">
+            <div class="page-brand">SDAI CHILE</div>
+            <div class="page-label">Siguiente Paso</div>
+            <div class="page-num"><span>10</span> / 10</div>
+        </div>
+        <div class="hero-center">
+            <div class="slide-tag" style="justify-content:center;">Siguiente Paso</div>
+            <h1 style="font-size:28pt;">
+                ¿Listo para <span class="g-cyan">Proteger</span> y<br>
+                <span class="g-gold">Potenciar</span> sus Datos?
+            </h1>
+            <div class="cta-box" style="margin-top:6mm;">
+                <h2 style="font-size:13pt;">Agende una Consulta Gratuita</h2>
+                <p style="color:var(--muted); font-size:8.5pt; line-height:1.65; margin-bottom:0;">
+                    Conversemos sobre cómo podemos ayudar a su organización a cumplir con la Ley 21.719,<br>
+                    establecer un gobierno de datos robusto y adoptar IA de manera responsable.
+                </p>
+                <div class="cta-contacts">
+                    <div class="cta-item">🌐 <strong>sdaichile.com</strong></div>
+                    <div class="cta-item">✉️ <strong>contacto@sdaichile.com</strong></div>
+                    <div class="cta-item">💼 <strong>LinkedIn: SDAI Chile</strong></div>
+                </div>
+            </div>
+            <div class="hero-divider" style="margin-top:6mm;"></div>
+            <p style="color:var(--dimmed); font-size:7pt; margin-top:4mm;">
+                © 2026 SDAI Chile — Servicios de Datos, Analítica e Inteligencia. Todos los derechos reservados.
+            </p>
+        </div>
+    </div>
+    <div class="page-footer">
+        <div class="footer-brand">SDAI CHILE — Servicios de Datos, Analítica e Inteligencia</div>
+        <div class="footer-url">sdaichile.com</div>
+        <div class="footer-right">© 2026 Todos los derechos reservados</div>
+    </div>
+</div>
+
+</body>
+</html>

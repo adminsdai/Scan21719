@@ -1,0 +1,1104 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDAI Chile — Servicios Profesionales 2026</title>
+    <meta name="description" content="Presentación de Servicios SDAI Chile: Protección de Datos, Gobernanza de Datos DMBOK2, e Inteligencia Artificial Agnóstica.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ═══════════════════════════════════════════════════
+           DESIGN TOKENS
+        ═══════════════════════════════════════════════════ */
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #101827;
+            --bg-card: rgba(17, 24, 45, 0.85);
+            --accent-cyan: #22d3ee;
+            --accent-teal: #14b8a6;
+            --accent-gold: #f59e0b;
+            --accent-purple: #a78bfa;
+            --accent-rose: #f43f5e;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border-subtle: rgba(148, 163, 184, 0.12);
+            --font-heading: 'Plus Jakarta Sans', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --glass-bg: rgba(15, 23, 42, 0.6);
+            --glass-border: rgba(148, 163, 184, 0.15);
+        }
+
+        /* ═══════════════════════════════════════════════════
+           RESET & BASE
+        ═══════════════════════════════════════════════════ */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           ANIMATED BACKGROUND
+        ═══════════════════════════════════════════════════ */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image:
+                linear-gradient(rgba(34,211,238,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(34,211,238,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: gridPulse 8s ease-in-out infinite;
+        }
+        @keyframes gridPulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.8; }
+        }
+
+        .bg-orbs {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .bg-orbs::before, .bg-orbs::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.15;
+            animation: orbFloat 12s ease-in-out infinite;
+        }
+        .bg-orbs::before {
+            width: 500px; height: 500px;
+            background: var(--accent-cyan);
+            top: -10%; left: -5%;
+        }
+        .bg-orbs::after {
+            width: 400px; height: 400px;
+            background: var(--accent-purple);
+            bottom: -10%; right: -5%;
+            animation-delay: -6s;
+        }
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -30px) scale(1.1); }
+        }
+
+        /* ═══════════════════════════════════════════════════
+           PRESENTATION CONTAINER
+        ═══════════════════════════════════════════════════ */
+        .presentation {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           SLIDES
+        ═══════════════════════════════════════════════════ */
+        .slide {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 80px;
+            opacity: 0;
+            transform: translateX(60px);
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: all;
+        }
+        .slide.exit-left {
+            opacity: 0;
+            transform: translateX(-60px);
+        }
+
+        .slide-inner {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           TYPOGRAPHY
+        ═══════════════════════════════════════════════════ */
+        .slide-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-cyan);
+            margin-bottom: 18px;
+            opacity: 0;
+            transform: translateY(15px);
+            animation: fadeUp 0.5s 0.2s forwards;
+        }
+        .slide-tag::before {
+            content: '';
+            width: 24px;
+            height: 2px;
+            background: var(--accent-cyan);
+        }
+
+        .slide-title {
+            font-family: var(--font-heading);
+            font-size: 3.2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.6s 0.3s forwards;
+        }
+        .slide-title .gradient-text {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-teal));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .slide-title .gradient-gold {
+            background: linear-gradient(135deg, var(--accent-gold), #fbbf24);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .slide-title .gradient-purple {
+            background: linear-gradient(135deg, var(--accent-purple), #c084fc);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .slide-title .gradient-rose {
+            background: linear-gradient(135deg, var(--accent-rose), #fb7185);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .slide-subtitle {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            max-width: 700px;
+            margin-bottom: 35px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.6s 0.4s forwards;
+        }
+
+        @keyframes fadeUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ═══════════════════════════════════════════════════
+           LAYOUT HELPERS
+        ═══════════════════════════════════════════════════ */
+        .split-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+        .split-60-40 {
+            grid-template-columns: 1.4fr 1fr;
+        }
+        .split-40-60 {
+            grid-template-columns: 1fr 1.4fr;
+        }
+
+        .slide-image {
+            width: 100%;
+            max-width: 420px;
+            border-radius: 18px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+            animation: imgReveal 0.7s 0.5s forwards;
+        }
+        @keyframes imgReveal {
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           CARDS & FEATURE BOXES
+        ═══════════════════════════════════════════════════ */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 10px;
+        }
+        .features-grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .features-grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 28px 24px;
+            backdrop-filter: blur(12px);
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .feature-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 12px 40px rgba(34, 211, 238, 0.1);
+        }
+
+        .feature-card .icon {
+            font-size: 2rem;
+            margin-bottom: 14px;
+            display: block;
+        }
+        .feature-card h3 {
+            font-family: var(--font-heading);
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+        .feature-card p {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+        }
+
+        .feature-card.accent-cyan { border-top: 3px solid var(--accent-cyan); }
+        .feature-card.accent-gold { border-top: 3px solid var(--accent-gold); }
+        .feature-card.accent-purple { border-top: 3px solid var(--accent-purple); }
+        .feature-card.accent-rose { border-top: 3px solid var(--accent-rose); }
+        .feature-card.accent-teal { border-top: 3px solid var(--accent-teal); }
+
+        /* ═══════════════════════════════════════════════════
+           STAT BOXES
+        ═══════════════════════════════════════════════════ */
+        .stats-row {
+            display: flex;
+            gap: 24px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        .stat-box {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 20px 28px;
+            text-align: center;
+            flex: 1;
+            min-width: 130px;
+        }
+        .stat-box .stat-num {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-teal));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .stat-box .stat-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           TIMELINE
+        ═══════════════════════════════════════════════════ */
+        .timeline {
+            position: relative;
+            padding-left: 36px;
+            margin-top: 10px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--accent-cyan), var(--accent-purple));
+            border-radius: 2px;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 22px;
+            opacity: 0;
+            transform: translateX(20px);
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 6px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-cyan);
+            border: 3px solid var(--bg-primary);
+            box-shadow: 0 0 10px rgba(34,211,238,0.4);
+        }
+        .timeline-item h4 {
+            font-family: var(--font-heading);
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .timeline-item p {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           LIST ITEMS
+        ═══════════════════════════════════════════════════ */
+        .check-list {
+            list-style: none;
+            margin-top: 8px;
+        }
+        .check-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        .check-list li::before {
+            content: '✓';
+            flex-shrink: 0;
+            color: var(--accent-cyan);
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           BOTTOM BAR (Navigation + Branding)
+        ═══════════════════════════════════════════════════ */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 40px;
+            background: rgba(10, 14, 26, 0.92);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .bottom-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .bottom-brand .brand-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-cyan);
+            box-shadow: 0 0 8px rgba(34,211,238,0.5);
+        }
+
+        .slide-counter {
+            font-family: var(--font-heading);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .slide-counter .current-slide {
+            color: var(--accent-cyan);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        .nav-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: var(--text-primary);
+            width: 42px;
+            height: 42px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+        }
+        .nav-btn:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(34,211,238,0.08);
+            color: var(--accent-cyan);
+        }
+
+        /* Progress bar */
+        .progress-track {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: rgba(148,163,184,0.1);
+            z-index: 200;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-teal));
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 0 2px 2px 0;
+            box-shadow: 0 0 12px rgba(34,211,238,0.4);
+        }
+
+        /* ═══════════════════════════════════════════════════
+           SLIDE-SPECIFIC: HERO
+        ═══════════════════════════════════════════════════ */
+        .hero-center {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .hero-center .slide-tag { justify-content: center; }
+        .hero-center .slide-subtitle { max-width: 680px; text-align: center; }
+        .hero-logo {
+            font-family: var(--font-heading);
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: 4px;
+            color: var(--accent-cyan);
+            margin-bottom: 10px;
+            opacity: 0;
+            animation: fadeUp 0.5s 0.1s forwards;
+        }
+        .hero-divider {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), transparent);
+            border-radius: 3px;
+            margin: 20px auto 0;
+            opacity: 0;
+            animation: fadeUp 0.6s 0.6s forwards;
+        }
+
+        /* ═══════════════════════════════════════════════════
+           SLIDE-SPECIFIC: CTA / CLOSING
+        ═══════════════════════════════════════════════════ */
+        .cta-box {
+            background: linear-gradient(135deg, rgba(34,211,238,0.08), rgba(20,184,166,0.08));
+            border: 1px solid rgba(34,211,238,0.2);
+            border-radius: 18px;
+            padding: 40px 50px;
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .cta-box h2 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 14px;
+        }
+        .cta-box p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+        .cta-contacts {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .cta-contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            color: var(--accent-cyan);
+        }
+
+        /* ═══════════════════════════════════════════════════
+           RESPONSIVE (basic)
+        ═══════════════════════════════════════════════════ */
+        @media (max-width: 1024px) {
+            .slide { padding: 40px 40px 80px; }
+            .split-layout, .split-60-40, .split-40-60 { grid-template-columns: 1fr; gap: 30px; }
+            .features-grid, .features-grid-4 { grid-template-columns: repeat(2, 1fr); }
+            .slide-title { font-size: 2.4rem; }
+            .slide-image { max-width: 320px; }
+        }
+        @media (max-width: 600px) {
+            .slide { padding: 30px 20px 80px; }
+            .features-grid, .features-grid-2, .features-grid-4 { grid-template-columns: 1fr; }
+            .slide-title { font-size: 1.8rem; }
+            .stats-row { flex-direction: column; }
+        }
+
+        /* Pill badge */
+        .pill {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .pill-cyan { background: rgba(34,211,238,0.12); color: var(--accent-cyan); }
+        .pill-gold { background: rgba(245,158,11,0.12); color: var(--accent-gold); }
+        .pill-purple { background: rgba(167,139,250,0.12); color: var(--accent-purple); }
+    </style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs"></div>
+
+<!-- Progress Bar -->
+<div class="progress-track">
+    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+</div>
+
+<div class="presentation" id="presentation">
+
+    <!-- ════════════════════════════════════════════════
+         SLIDE 1 — HERO / PORTADA
+    ════════════════════════════════════════════════ -->
+    <div class="slide active" data-slide="0">
+        <div class="slide-inner hero-center">
+            <div class="hero-logo">SDAI CHILE</div>
+            <div class="slide-tag">Servicios Profesionales 2026</div>
+            <h1 class="slide-title">
+                Protección de Datos,<br>
+                <span class="gradient-text">Gobernanza Inteligente</span><br>
+                e IA para su Organización
+            </h1>
+            <p class="slide-subtitle">
+                Habilitamos a empresas públicas y privadas para cumplir con la Ley 21.719, implementar marcos de gobernanza de datos DMBOK2 y adoptar inteligencia artificial de forma segura, ética y agnóstica.
+            </p>
+            <div class="hero-divider"></div>
+            <div class="stats-row" style="margin-top: 35px;">
+                <div class="stat-box">
+                    <div class="stat-num">21.719</div>
+                    <div class="stat-label">Ley de Protección de Datos</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">DMBOK2</div>
+                    <div class="stat-label">Gobernanza de Datos</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">IA</div>
+                    <div class="stat-label">Inteligencia Artificial Agnóstica</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         SLIDE 2 — QUIÉNES SOMOS
+    ════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="1">
+        <div class="slide-inner split-layout split-60-40">
+            <div>
+                <div class="slide-tag">Acerca de nosotros</div>
+                <h1 class="slide-title">¿Quiénes somos?</h1>
+                <p class="slide-subtitle">
+                    <strong>SDAI Chile</strong> (Servicios de Datos, Analítica e Inteligencia) es una consultora especializada en la intersección entre la gobernanza de datos, la regulación y la tecnología. Ayudamos a organizaciones a transformar sus datos en activos estratégicos protegidos y utilizables.
+                </p>
+                <ul class="check-list">
+                    <li>Equipo multidisciplinario: legal, tecnológico y de gestión</li>
+                    <li>Enfoque práctico: diagnóstico, implementación y acompañamiento</li>
+                    <li>Experiencia en sector público y privado en Chile y LATAM</li>
+                    <li>Partners tecnológicos agnósticos: no vendemos software, vendemos soluciones</li>
+                </ul>
+            </div>
+            <div class="image-container">
+                <img src="img/hero_shield.png" alt="SDAI Shield" class="slide-image">
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         SLIDE 3 — CONTEXTO REGULATORIO
+    ════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="2">
+        <div class="slide-inner">
+            <div class="slide-tag">Contexto Regulatorio</div>
+            <h1 class="slide-title">
+                Ley 21.719: <span class="gradient-rose">Nueva Era</span> de<br>Protección de Datos en Chile
+            </h1>
+            <p class="slide-subtitle">
+                A partir del <strong>1 de diciembre de 2026</strong>, Chile exigirá cumplimiento total con su nueva ley de protección de datos personales, alineada con estándares internacionales como el GDPR europeo.
+            </p>
+            <div class="features-grid features-grid-4">
+                <div class="feature-card accent-cyan">
+                    <span class="icon">📋</span>
+                    <h3>Consentimiento Expreso</h3>
+                    <p>Art. 12: Todo tratamiento de datos requiere autorización previa, libre, informada e inequívoca del titular.</p>
+                </div>
+                <div class="feature-card accent-gold">
+                    <span class="icon">📜</span>
+                    <h3>Políticas Públicas</h3>
+                    <p>Art. 14 ter: Obligación de publicar y mantener accesible la política de tratamiento de datos personales.</p>
+                </div>
+                <div class="feature-card accent-purple">
+                    <span class="icon">⏱️</span>
+                    <h3>Proporcionalidad</h3>
+                    <p>Art. 3, letra c: Los datos solo pueden conservarse durante el período necesario para cumplir su finalidad.</p>
+                </div>
+                <div class="feature-card accent-rose">
+                    <span class="icon">🛡️</span>
+                    <h3>Principio de Seguridad</h3>
+                    <p>Art. 3, letra f: Medidas técnicas y organizativas para proteger los datos contra accesos no autorizados.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         SLIDE 4 — SERVICIO 1: PROTECCIÓN DE DATOS
+    ════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="3">
+        <div class="slide-inner split-layout split-40-60">
+            <div class="image-container">
+                <img src="img/compliance_legal.png" alt="Compliance" class="slide-image">
+            </div>
+            <div>
+                <div class="slide-tag">Servicio 01</div>
+                <h1 class="slide-title">
+                    Cumplimiento<br><span class="gradient-text">Ley 21.719</span>
+                </h1>
+                <p class="slide-subtitle">
+                    Programa integral de adecuación normativa para que su organización cumpla con la nueva ley de protección de datos personales antes de su entrada en vigencia.
+                </p>
+                <div class="features-grid features-grid-2">
+                    <div class="feature-card accent-cyan">
+                        <h3>🔍 Diagnóstico de Brechas</h3>
+                        <p>Escaneo automatizado de sitios web + auditoría legal de procesos de recolección de datos.</p>
+                    </div>
+                    <div class="feature-card accent-teal">
+                        <h3>📝 Políticas y Documentos</h3>
+                        <p>Redacción de Políticas de Privacidad, formularios de consentimiento y ENIA (Evaluación de Impacto).</p>
+                    </div>
+                    <div class="feature-card accent-gold">
+                        <h3>🍪 Banners y Consentimiento</h3>
+                        <p>Implementación de banners de cookies, opt-in granular y gestión de preferencias del usuario.</p>
+                    </div>
+                    <div class="feature-card accent-purple">
+                        <h3>📊 Monitoreo Continuo</h3>
+                        <p>Dashboard de cumplimiento con escaneo periódico, alertas de incumplimiento y reportes ejecutivos.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         SLIDE 5 — SERVICIO 2: GOBERNANZA DMBOK2
+    ════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="4">
+        <div class="slide-inner split-layout split-60-40">
+            <div>
+                <div class="slide-tag">Servicio 02</div>
+                <h1 class="slide-title">
+                    Gobernanza de Datos<br><span class="gradient-gold">DMA / DMBOK2</span>
+                </h1>
+                <p class="slide-subtitle">
+                    Implementamos el marco de referencia DAMA-DMBOK2 para establecer una gobernanza de datos robusta que maximice el valor de sus activos de información.
+                </p>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <h4>📐 Arquitectura de Datos</h4>
+                        <p>Diseño de modelos conceptuales, lógicos y físicos alineados con los objetivos del negocio.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>🏷️ Gestión de Metadatos</h4>
+                        <p>Catálogo de datos empresarial, linaje, diccionarios de datos y trazabilidad de activos.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>🎯 Calidad de Datos</h4>
+                        <p>Perfilamiento, reglas de validación, scorecards de calidad y procesos de limpieza automatizada.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>🔒 Seguridad y Privacidad de Datos</h4>
+                        <p>Clasificación de datos, controles de acceso, cifrado y políticas de retención según la Ley 21.719.</p>
+                    </div>
+                    <div class="timeline-item">
+                        <h4>📊 Master Data Management (MDM)</h4>
+                        <p>Definición de datos maestros, golden records y procesos de matching/merging de registros.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="image-container">
+                <img src="img/data_governance.png" alt="Data Governance" class="slide-image">
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         SLIDE 6 — SERVICIO 3: INTELIGENCIA ARTIFICIAL
+    ════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="5">
+        <div class="slide-inner split-layout split-40-60">
+            <div class="image-container">
+                <img src="img/ai_brain.png" alt="AI Brain" class="slide-image">
+            </div>
+            <div>
+                <div class="slide-tag">Servicio 03</div>
+                <h1 class="slide-title">
+                    Inteligencia Artificial<br><span class="gradient-purple">Agnóstica</span>
+                </h1>
+                <p class="slide-subtitle">
+                    Diseñamos e implementamos soluciones de IA sin dependencia de un solo proveedor. Nuestro enfoque agnóstico garantiza que su organización adopte la mejor tecnología para cada caso de uso.
+                </p>
+                <div class="features-grid features-grid-2">
+                    <div class="feature-card accent-purple">
+                        <h3>🤖 Automatización Inteligente</h3>
+                        <p>Agentes de IA para clasificación de documentos, atención al público y análisis de contratos regulatorios.</p>
+                    </div>
+                    <div class="feature-card accent-cyan">
+                        <h3>📈 Analítica Avanzada</h3>
+                        <p>Modelos predictivos, NLP para extracción de entidades y detección de patrones anómalos en datos.</p>
+                    </div>
+                    <div class="feature-card accent-gold">
+                        <h3>🧠 IA Responsable</h3>
+                        <p>Evaluaciones de sesgo, explicabilidad de modelos (XAI), y cumplimiento ético según estándares internacionales.</p>
+                    </div>
+                    <div class="feature-card accent-teal">
+                        <h3>☁️ Multi-Cloud / On-Prem</h3>
+                        <p>Despliegue en Azure, AWS, GCP u on-premise. Sin lock-in. Orquestación con herramientas open source.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         SLIDE 7 — METODOLOGÍA
+    ════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="6">
+        <div class="slide-inner">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <div class="slide-tag" style="justify-content: center;">Nuestra Metodología</div>
+                <h1 class="slide-title" style="text-align: center;">
+                    Enfoque en <span class="gradient-text">4 Fases</span>
+                </h1>
+                <p class="slide-subtitle" style="margin: 0 auto 30px; text-align: center;">
+                    Un proceso estructurado y probado que asegura resultados medibles en cada etapa.
+                </p>
+            </div>
+            <div class="features-grid features-grid-4">
+                <div class="feature-card accent-cyan" style="text-align: center;">
+                    <span class="icon">🔍</span>
+                    <span class="pill pill-cyan">Fase 1</span>
+                    <h3 style="margin-top: 10px;">Diagnóstico</h3>
+                    <p>Levantamiento del estado actual: procesos, tecnología, madurez de datos y brechas regulatorias.</p>
+                </div>
+                <div class="feature-card accent-gold" style="text-align: center;">
+                    <span class="icon">📐</span>
+                    <span class="pill pill-gold">Fase 2</span>
+                    <h3 style="margin-top: 10px;">Diseño</h3>
+                    <p>Hoja de ruta priorizada, arquitectura objetivo, políticas y plan de gobierno de datos.</p>
+                </div>
+                <div class="feature-card accent-purple" style="text-align: center;">
+                    <span class="icon">⚙️</span>
+                    <span class="pill pill-purple">Fase 3</span>
+                    <h3 style="margin-top: 10px;">Implementación</h3>
+                    <p>Despliegue de herramientas, capacitación del equipo, automatización de procesos y puesta en producción.</p>
+                </div>
+                <div class="feature-card accent-teal" style="text-align: center;">
+                    <span class="icon">📊</span>
+                    <span class="pill pill-cyan">Fase 4</span>
+                    <h3 style="margin-top: 10px;">Evolución</h3>
+                    <p>Monitoreo continuo, métricas de cumplimiento, mejora iterativa y acompañamiento permanente.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         SLIDE 8 — SECTORES Y CLIENTES
+    ════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="7">
+        <div class="slide-inner">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <div class="slide-tag" style="justify-content: center;">Nuestro Alcance</div>
+                <h1 class="slide-title" style="text-align: center;">
+                    Sector <span class="gradient-text">Público</span> y <span class="gradient-gold">Privado</span>
+                </h1>
+                <p class="slide-subtitle" style="margin: 0 auto 30px; text-align: center;">
+                    Adaptamos nuestras soluciones a las necesidades específicas de cada industria y tipo de organización.
+                </p>
+            </div>
+            <div class="features-grid" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="feature-card accent-cyan">
+                    <span class="icon">🏛️</span>
+                    <h3>Gobierno y Municipalidades</h3>
+                    <p>Cumplimiento de la Ley 21.719 en plataformas ciudadanas, portales de transparencia y servicios digitales del Estado.</p>
+                </div>
+                <div class="feature-card accent-gold">
+                    <span class="icon">🏥</span>
+                    <h3>Salud</h3>
+                    <p>Protección de datos sensibles de pacientes, HCE, telemedicina y cumplimiento de estándares HL7/FHIR.</p>
+                </div>
+                <div class="feature-card accent-purple">
+                    <span class="icon">🏦</span>
+                    <h3>Banca y Finanzas</h3>
+                    <p>Gobernanza de datos financieros, prevención de fraude con IA, reportes regulatorios y gestión de riesgo.</p>
+                </div>
+                <div class="feature-card accent-rose">
+                    <span class="icon">🎓</span>
+                    <h3>Educación</h3>
+                    <p>Protección de datos de estudiantes menores de edad, plataformas LMS y analítica educativa responsable.</p>
+                </div>
+                <div class="feature-card accent-teal">
+                    <span class="icon">🛒</span>
+                    <h3>Retail y E-Commerce</h3>
+                    <p>Consentimiento de cookies, perfilamiento de clientes compatible con la ley, y personalización ética con IA.</p>
+                </div>
+                <div class="feature-card accent-cyan">
+                    <span class="icon">⚡</span>
+                    <h3>Energía y Minería</h3>
+                    <p>Gestión de datos de campo, IoT industrial, calidad de datos operacionales y compliance ambiental-datos.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         SLIDE 9 — DIFERENCIADORES
+    ════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="8">
+        <div class="slide-inner">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <div class="slide-tag" style="justify-content: center;">¿Por qué SDAI?</div>
+                <h1 class="slide-title" style="text-align: center;">
+                    Nuestro <span class="gradient-text">Diferencial</span>
+                </h1>
+            </div>
+            <div class="features-grid" style="grid-template-columns: repeat(3, 1fr);">
+                <div class="feature-card accent-cyan" style="text-align: center;">
+                    <span class="icon">🔓</span>
+                    <h3>Agnósticos por Convicción</h3>
+                    <p>No representamos ni vendemos software. Recomendamos la mejor herramienta para su contexto, sin conflictos de interés.</p>
+                </div>
+                <div class="feature-card accent-gold" style="text-align: center;">
+                    <span class="icon">🇨🇱</span>
+                    <h3>Expertise Local, Visión Global</h3>
+                    <p>Profundo conocimiento de la legislación chilena y experiencia práctica con marcos internacionales (GDPR, LGPD, CCPA).</p>
+                </div>
+                <div class="feature-card accent-purple" style="text-align: center;">
+                    <span class="icon">🛠️</span>
+                    <h3>Herramientas Propias</h3>
+                    <p>Desarrollamos soluciones como el Escáner de Cumplimiento Ley 21.719 para diagnóstico automatizado y monitoreo continuo.</p>
+                </div>
+            </div>
+            <div class="stats-row" style="margin-top: 30px;">
+                <div class="stat-box">
+                    <div class="stat-num">360°</div>
+                    <div class="stat-label">Visión integral</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">24/7</div>
+                    <div class="stat-label">Monitoreo continuo</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">100%</div>
+                    <div class="stat-label">Independiente</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-num">LATAM</div>
+                    <div class="stat-label">Cobertura regional</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════
+         SLIDE 10 — CONTACTO / CTA
+    ════════════════════════════════════════════════ -->
+    <div class="slide" data-slide="9">
+        <div class="slide-inner hero-center">
+            <div class="slide-tag" style="justify-content: center;">Siguiente Paso</div>
+            <h1 class="slide-title" style="text-align: center;">
+                ¿Listo para <span class="gradient-text">Proteger</span> y<br>
+                <span class="gradient-gold">Potenciar</span> sus Datos?
+            </h1>
+            <div class="cta-box" style="margin-top: 25px;">
+                <h2>Agende una Consulta Gratuita</h2>
+                <p>
+                    Conversemos sobre cómo podemos ayudar a su organización a cumplir con la Ley 21.719, establecer un gobierno de datos robusto y adoptar IA de manera responsable.
+                </p>
+                <div class="cta-contacts">
+                    <div class="cta-contact-item">
+                        🌐 <strong>sdaichile.com</strong>
+                    </div>
+                    <div class="cta-contact-item">
+                        ✉️ <strong>contacto@sdaichile.com</strong>
+                    </div>
+                    <div class="cta-contact-item">
+                        📱 <strong>LinkedIn: SDAI Chile</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-divider" style="margin-top: 30px;"></div>
+            <p style="color: var(--text-muted); font-size: 0.8rem; margin-top: 20px; opacity: 0; animation: fadeUp 0.5s 0.7s forwards;">
+                © 2026 SDAI Chile — Servicios de Datos, Analítica e Inteligencia. Todos los derechos reservados.
+            </p>
+        </div>
+    </div>
+
+</div>
+
+<!-- Bottom Navigation Bar -->
+<div class="bottom-bar">
+    <div class="bottom-brand">
+        <span class="brand-dot"></span>
+        SDAI CHILE — Servicios Profesionales
+    </div>
+    <div class="slide-counter">
+        <span class="current-slide" id="currentSlideNum">01</span>
+        <span>/ </span>
+        <span id="totalSlides">10</span>
+    </div>
+    <div class="nav-buttons">
+        <button class="nav-btn" id="btnPrev" title="Anterior">◀</button>
+        <button class="nav-btn" id="btnNext" title="Siguiente">▶</button>
+    </div>
+</div>
+
+<script>
+(function() {
+    var slides = document.querySelectorAll('.slide');
+    var totalSlides = slides.length;
+    var progressFill = document.getElementById('progressFill');
+    var currentSlideNum = document.getElementById('currentSlideNum');
+    var totalSlidesEl = document.getElementById('totalSlides');
+    var btnPrev = document.getElementById('btnPrev');
+    var btnNext = document.getElementById('btnNext');
+    var currentIndex = 0;
+    var isTransitioning = false;
+
+    totalSlidesEl.textContent = String(totalSlides).padStart(2, '0');
+
+    function updateProgress() {
+        var pct = ((currentIndex + 1) / totalSlides) * 100;
+        progressFill.style.width = pct + '%';
+        currentSlideNum.textContent = String(currentIndex + 1).padStart(2, '0');
+    }
+
+    function animateCards(slide) {
+        var cards = slide.querySelectorAll('.feature-card, .timeline-item');
+        cards.forEach(function(card, i) {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'none';
+            setTimeout(function() {
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 150 + i * 100);
+        });
+    }
+
+    function showSlide(index) {
+        slides.forEach(function(s) {
+            s.classList.remove('active');
+        });
+        slides[index].classList.add('active');
+        currentIndex = index;
+        updateProgress();
+        animateCards(slides[index]);
+    }
+
+    function goTo(index) {
+        if (isTransitioning || index === currentIndex || index < 0 || index >= totalSlides) return;
+        isTransitioning = true;
+        showSlide(index);
+        setTimeout(function() { isTransitioning = false; }, 700);
+    }
+
+    function nextSlide() { goTo(currentIndex + 1); }
+    function prevSlide() { goTo(currentIndex - 1); }
+
+    btnNext.addEventListener('click', nextSlide);
+    btnPrev.addEventListener('click', prevSlide);
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+        if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+        if (e.key === 'Home') { e.preventDefault(); goTo(0); }
+        if (e.key === 'End') { e.preventDefault(); goTo(totalSlides - 1); }
+    });
+
+    var touchStartX = 0;
+    document.addEventListener('touchstart', function(e) { touchStartX = e.touches[0].clientX; });
+    document.addEventListener('touchend', function(e) {
+        var diff = touchStartX - e.changedTouches[0].clientX;
+        if (Math.abs(diff) > 50) { diff > 0 ? nextSlide() : prevSlide(); }
+    });
+
+    var wheelTimeout;
+    document.addEventListener('wheel', function(e) {
+        clearTimeout(wheelTimeout);
+        wheelTimeout = setTimeout(function() {
+            if (e.deltaY > 30) nextSlide();
+            else if (e.deltaY < -30) prevSlide();
+        }, 60);
+    });
+
+    updateProgress();
+    animateCards(slides[0]);
+})();
+</script>
+
+</body>
+</html>

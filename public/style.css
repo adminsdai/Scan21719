@@ -1146,7 +1146,7 @@ tr:last-child td {
     }
 }
 
-/* Mobile responsive styles */
+/* Tablet & Mobile responsive styles */
 @media (max-width: 1024px) {
     .app-layout {
         grid-template-columns: 1fr;
@@ -1155,9 +1155,113 @@ tr:last-child td {
     .sidebar {
         border-right: none;
         border-bottom: 1px solid var(--card-border);
+        padding: 20px;
+    }
+
+    .side-nav {
+        flex-direction: row;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        white-space: nowrap;
+    }
+
+    .nav-btn {
+        flex-shrink: 0;
     }
     
     .grid-layout {
         grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .content-area {
+        padding: 20px;
+    }
+
+    .welcome-text h1 {
+        font-size: 1.5rem;
+    }
+
+    .card {
+        padding: 20px;
+    }
+
+    .summary-stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-box[style*="grid-column"] {
+        grid-column: span 1 !important;
+    }
+
+    .headers-status-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .results-summary-row {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+    }
+
+    .tabs-header {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 5px;
+    }
+    
+    .tab-btn {
+        padding: 10px 15px;
+        font-size: 0.85rem;
+    }
+    
+    .scan-form {
+        flex-direction: column;
+    }
+    
+    .countdown-banner .banner-content {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+    }
+    
+    .logo-area {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .score-circle-container {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .score-svg {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .score-number {
+        font-size: 1.5rem;
+    }
+    
+    .info-icon {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .info-icon i {
+        width: 25px;
+        height: 25px;
+    }
+    
+    th, td {
+        padding: 10px;
+        font-size: 0.75rem;
+    }
+    
+    .presets-buttons {
+        flex-direction: column;
     }
 }

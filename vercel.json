@@ -1,6 +1,20 @@
 {
-  "rewrites": [
-    { "source": "/api/scan", "destination": "/api/scan.js" },
-    { "source": "/(.*)", "destination": "/public/$1" }
+  "version": 2,
+  "framework": null,
+  "outputDirectory": "public",
+  "functions": {
+    "api/scan.js": {
+      "maxDuration": 30
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/scan",
+      "dest": "/api/scan.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
   ]
 }

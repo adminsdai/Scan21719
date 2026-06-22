@@ -64,6 +64,11 @@
                     <p class="fine-amount">Hasta 20.000 UTM</p>
                     <p class="fine-desc">O hasta el 4% de ingresos anuales en reincidencia de grandes empresas.</p>
                 </div>
+                <div style="margin-top: 15px; text-align: center;">
+                    <a href="politica-privacidad.html" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                        <i data-lucide="shield" style="width: 14px; height: 14px;"></i> Política de Privacidad
+                    </a>
+                </div>
             </div>
         </aside>
 
@@ -458,5 +463,60 @@
 
     <!-- Script JavaScript -->
     <script src="app.js"></script>
+
+    <!-- BANNER DE CONSENTIMIENTO DE COOKIES - LEY 21.719 -->
+    <div id="apdp-cookie-banner" style="position: fixed; bottom: 20px; right: 20px; max-width: 420px; z-index: 99999; padding: 24px; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.85rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3); background: #1e293b; color: #f8fafc; border: 1px solid rgba(255,255,255,0.08); transition: transform 0.3s ease-in-out;">
+        <div style="font-weight: 700; font-size: 1rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+            <span style="font-size:1.2rem;">🍪</span> Consentimiento de Privacidad
+        </div>
+        <p style="line-height: 1.4; margin-bottom: 15px; opacity: 0.9;">
+            Conforme a la <strong>Ley N° 21.719 de Chile</strong>, requerimos tu consentimiento para instalar cookies no esenciales de analítica y marketing. Puedes configurar tus preferencias en cualquier momento.
+        </p>
+        
+        <!-- Configuración Granular -->
+        <div style="margin-bottom: 15px; display: flex; flex-direction: column; gap: 6px;">
+            <label style="display: flex; align-items: center; gap: 8px; font-weight: 600;">
+                <input type="checkbox" id="cookie-ess" checked disabled style="accent-color: #06b6d4;"> Necesarias (Siempre activas)
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px;">
+                <input type="checkbox" id="cookie-ana" style="accent-color: #06b6d4;"> Analítica y Rendimiento
+            </label>
+            <label style="display: flex; align-items: center; gap: 8px;">
+                <input type="checkbox" id="cookie-mkt" style="accent-color: #06b6d4;"> Publicidad y Marketing
+            </label>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+            <button id="cookie-btn-reject" style="background: transparent; border: 1px solid rgba(128,128,128,0.4); padding: 8px 14px; border-radius: 6px; cursor: pointer; color: inherit; font-weight: 600;">Rechazar todo</button>
+            <button id="cookie-btn-accept" style="border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 600; background: #06b6d4; color: #fff;">Guardar y Aceptar</button>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        var banner = document.getElementById('apdp-cookie-banner');
+        var acceptBtn = document.getElementById('cookie-btn-accept');
+        var rejectBtn = document.getElementById('cookie-btn-reject');
+        var anaCheckbox = document.getElementById('cookie-ana');
+        var mktCheckbox = document.getElementById('cookie-mkt');
+
+        var consent = localStorage.getItem('apdp-cookie-consent');
+        if (consent) {
+            banner.style.display = 'none';
+        }
+
+        acceptBtn.addEventListener('click', function() {
+            var settings = { necessaries: true, analytics: anaCheckbox.checked, marketing: mktCheckbox.checked, timestamp: new Date().getTime() };
+            localStorage.setItem('apdp-cookie-consent', JSON.stringify(settings));
+            banner.style.display = 'none';
+        });
+
+        rejectBtn.addEventListener('click', function() {
+            var settings = { necessaries: true, analytics: false, marketing: false, timestamp: new Date().getTime() };
+            localStorage.setItem('apdp-cookie-consent', JSON.stringify(settings));
+            banner.style.display = 'none';
+        });
+    })();
+    </script>
 </body>
 </html>
