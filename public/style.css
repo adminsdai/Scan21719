@@ -250,6 +250,7 @@ body {
     padding: 40px;
     overflow-y: auto;
     max-height: calc(100vh - 45px);
+    min-width: 0;
 }
 
 .tab-content {
@@ -296,6 +297,10 @@ body {
     grid-template-columns: 1.2fr 1fr;
     gap: 30px;
     margin-bottom: 35px;
+}
+
+.left-col, .right-col {
+    min-width: 0;
 }
 
 /* Card General Design */
