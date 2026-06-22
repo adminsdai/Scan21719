@@ -163,6 +163,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 500);
 
         try {
+            // Registrar consentimiento inmutable antes de escanear
+            fetch('/api/consent', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    url_scanned: rawUrl, 
+                    user_agent: navigator.userAgent 
+                })
+            }).catch(e => console.error('Consent logging failed:', e));
+
             // Make actual API scan call
             const response = await fetch(`/api/scan?url=${encodeURIComponent(rawUrl)}`);
             const data = await response.json();

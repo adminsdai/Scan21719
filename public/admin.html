@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Privacidad - SDAI Chile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.umd.min.js"></script>
+</head>
+<body>
+    <div class="glow-bg"></div>
+
+    <div class="app-layout admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar admin-sidebar">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <i data-lucide="shield-check"></i>
+                </div>
+                <div>
+                    <h2>Admin APDP</h2>
+                    <span class="version">Log Inmutable Ley 21.719</span>
+                </div>
+            </div>
+            
+            <nav class="side-nav">
+                <button class="nav-btn active" data-target="logs-tab">
+                    <i data-lucide="database"></i> Registro de Consentimientos
+                </button>
+                <button class="nav-btn" data-target="settings-tab">
+                    <i data-lucide="settings"></i> Configuración de Seguridad
+                </button>
+                <a href="/" class="nav-btn" style="margin-top: auto; color: var(--color-primary); border: 1px solid var(--color-primary); justify-content: center;">
+                    <i data-lucide="arrow-left"></i> Volver al Escáner
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content-area">
+            
+            <!-- LOGIN VIEW -->
+            <section id="login-view" class="card login-card active">
+                <div class="info-icon" style="margin: 0 auto 20px auto; color: var(--color-primary);">
+                    <i data-lucide="fingerprint"></i>
+                </div>
+                <h2 style="text-align: center; margin-bottom: 10px; font-family: var(--font-heading);">Autenticación Biométrica</h2>
+                <p style="text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 30px;">
+                    Acceso protegido mediante Passkeys (WebAuthn). Cero contraseñas.
+                </p>
+
+                <div style="display: flex; flex-direction: column; gap: 15px; align-items: center;">
+                    <button id="login-btn" class="btn btn-primary" style="width: 100%; max-width: 300px;">
+                        <i data-lucide="scan-face"></i> Iniciar Sesión Segura
+                    </button>
+                    <button id="setup-btn" class="btn btn-outline" style="width: 100%; max-width: 300px; font-size: 0.8rem;">
+                        <i data-lucide="key"></i> Configurar Admin (Primer Uso)
+                    </button>
+                </div>
+                <div id="auth-error" class="text-danger" style="margin-top: 15px; text-align: center; font-size: 0.85rem; display: none;"></div>
+            </section>
+
+            <!-- DASHBOARD VIEW -->
+            <section id="dashboard-view" class="hidden">
+                <div class="welcome-text">
+                    <h1>Trazabilidad de Consentimientos</h1>
+                    <p>Registro <strong>Append-Only</strong> (Solo Inserción). Estos datos no pueden ser modificados ni borrados. Cumplen el principio de transparencia de la Ley 21.719.</p>
+                </div>
+
+                <div class="card" style="margin-top: 30px; padding: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <h3>Historial de Actividad</h3>
+                        <button id="refresh-logs-btn" class="btn btn-outline btn-sm">
+                            <i data-lucide="refresh-cw"></i> Actualizar
+                        </button>
+                    </div>
+
+                    <div class="table-container">
+                        <table id="logs-table">
+                            <thead>
+                                <tr>
+                                    <th>Fecha (UTC)</th>
+                                    <th>Acción</th>
+                                    <th>URL Afectada</th>
+                                    <th>IP (Anonimizada)</th>
+                                    <th>Navegador / Dispositivo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Los logs se inyectarán aquí -->
+                                <tr>
+                                    <td colspan="5" style="text-align: center; color: var(--text-muted);">Cargando registros inmutables...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+        </main>
+    </div>
+
+    <script src="admin.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

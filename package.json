@@ -8,10 +8,14 @@
     "dev": "node server.js"
   },
   "dependencies": {
+    "@simplewebauthn/server": "^13.3.1",
+    "@supabase/supabase-js": "^2.108.2",
     "axios": "^1.6.8",
     "cheerio": "^1.0.0-rc.12",
+    "cookie": "^1.1.1",
     "cors": "^2.8.5",
-    "express": "^4.19.2"
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.3"
   },
   "author": "Antigravity",
   "license": "ISC"

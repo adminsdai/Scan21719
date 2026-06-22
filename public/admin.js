@@ -1,0 +1,149 @@
+const { startRegistration, startAuthentication } = SimpleWebAuthnBrowser;
+
+document.addEventListener('DOMContentLoaded', () => {
+    const loginBtn = document.getElementById('login-btn');
+    const setupBtn = document.getElementById('setup-btn');
+    const authError = document.getElementById('auth-error');
+    
+    const loginView = document.getElementById('login-view');
+    const dashboardView = document.getElementById('dashboard-view');
+    const refreshLogsBtn = document.getElementById('refresh-logs-btn');
+
+    // SETUP - Registro del primer (y único) administrador
+    setupBtn.addEventListener('click', async () => {
+        authError.style.display = 'none';
+        setupBtn.disabled = true;
+        
+        try {
+            // 1. Obtener opciones de registro del servidor
+            const resp = await fetch('/api/auth/register-generate');
+            if (!resp.ok) {
+                const err = await resp.json();
+                throw new Error(err.error || 'Setup unavailable');
+            }
+            const options = await resp.json();
+
+            // 2. Invocar WebAuthn en el navegador
+            const attResp = await startRegistration(options);
+
+            // 3. Enviar verificación al servidor
+            const verificationResp = await fetch('/api/auth/register-verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(attResp),
+            });
+
+            const verificationJSON = await verificationResp.json();
+            if (verificationJSON && verificationJSON.verified) {
+                alert('¡Administrador registrado exitosamente con Passkey!');
+            } else {
+                throw new Error(verificationJSON.error || 'Verification failed');
+            }
+        } catch (error) {
+            console.error(error);
+            authError.innerText = error.message;
+            authError.style.display = 'block';
+        } finally {
+            setupBtn.disabled = false;
+        }
+    });
+
+    // LOGIN - Autenticación del administrador
+    loginBtn.addEventListener('click', async () => {
+        authError.style.display = 'none';
+        loginBtn.disabled = true;
+        loginBtn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Verificando...';
+        lucide.createIcons();
+
+        try {
+            // 1. Obtener opciones de autenticación
+            const resp = await fetch('/api/auth/login-generate');
+            if (!resp.ok) {
+                const err = await resp.json();
+                throw new Error(err.error || 'Login unavailable');
+            }
+            const options = await resp.json();
+
+            // 2. Invocar WebAuthn
+            const asseResp = await startAuthentication(options);
+
+            // 3. Verificar en el servidor
+            const verificationResp = await fetch('/api/auth/login-verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(asseResp),
+            });
+
+            const verificationJSON = await verificationResp.json();
+            if (verificationJSON && verificationJSON.verified) {
+                // Éxito - Mostrar Dashboard
+                showDashboard();
+            } else {
+                throw new Error(verificationJSON.error || 'Login failed');
+            }
+        } catch (error) {
+            console.error(error);
+            authError.innerText = error.message;
+            authError.style.display = 'block';
+        } finally {
+            loginBtn.disabled = false;
+            loginBtn.innerHTML = '<i data-lucide="scan-face"></i> Iniciar Sesión Segura';
+            lucide.createIcons();
+        }
+    });
+
+    refreshLogsBtn.addEventListener('click', loadLogs);
+
+    function showDashboard() {
+        loginView.classList.remove('active');
+        loginView.classList.add('hidden');
+        dashboardView.classList.remove('hidden');
+        loadLogs();
+    }
+
+    async function loadLogs() {
+        const tbody = document.querySelector('#logs-table tbody');
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;"><i data-lucide="loader-2" class="spin"></i> Cargando...</td></tr>';
+        lucide.createIcons();
+
+        try {
+            const resp = await fetch('/api/admin/logs');
+            if (resp.status === 401) {
+                // Sesión expirada
+                alert('Sesión expirada. Por favor inicia sesión nuevamente.');
+                window.location.reload();
+                return;
+            }
+            
+            const logs = await resp.json();
+            
+            if (!logs || logs.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No hay registros de consentimiento aún.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = '';
+            logs.forEach(log => {
+                const tr = document.createElement('tr');
+                const date = new Date(log.created_at).toLocaleString('es-CL');
+                
+                tr.innerHTML = `
+                    <td>${date}</td>
+                    <td><span class="action-badge"><i data-lucide="check-circle-2" style="width: 14px; height: 14px;"></i> ${log.action}</span></td>
+                    <td style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${log.url_scanned}">
+                        ${log.url_scanned}
+                    </td>
+                    <td><span class="ip-badge">${log.ip_anonymized}</span></td>
+                    <td style="font-size: 0.8rem; color: var(--text-muted); max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${log.user_agent}">
+                        ${log.user_agent}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+            lucide.createIcons();
+        } catch (error) {
+            console.error('Error fetching logs:', error);
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--color-danger);">Error al cargar los registros.</td></tr>';
+        }
+    }
+});
