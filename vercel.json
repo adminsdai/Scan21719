@@ -7,16 +7,6 @@
       "maxDuration": 30
     }
   },
-  "routes": [
-    {
-      "src": "/api/scan",
-      "dest": "/api/scan.js"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",

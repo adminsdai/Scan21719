@@ -1155,7 +1155,7 @@ tr:last-child td {
     .sidebar {
         border-right: none;
         border-bottom: 1px solid var(--card-border);
-        padding: 20px;
+        padding: 15px;
     }
 
     .side-nav {
@@ -1176,7 +1176,17 @@ tr:last-child td {
 
 @media (max-width: 768px) {
     .content-area {
-        padding: 20px;
+        padding: 15px;
+    }
+
+    .sidebar .fine-card {
+        display: none;
+    }
+
+    .sidebar > div[style*="text-align: center"] {
+        flex-direction: row !important;
+        flex-wrap: wrap;
+        justify-content: center;
     }
 
     .welcome-text h1 {
@@ -1184,19 +1194,16 @@ tr:last-child td {
     }
 
     .card {
-        padding: 20px;
+        padding: 15px;
     }
 
-    .summary-stats-grid {
+    .summary-stats-grid,
+    .headers-status-grid {
         grid-template-columns: 1fr;
     }
     
     .stat-box[style*="grid-column"] {
         grid-column: span 1 !important;
-    }
-
-    .headers-status-grid {
-        grid-template-columns: 1fr;
     }
 
     .results-summary-row {
@@ -1218,16 +1225,30 @@ tr:last-child td {
     
     .scan-form {
         flex-direction: column;
+        gap: 10px !important;
+    }
+
+    .scan-form .input-wrapper,
+    .scan-form .btn {
+        width: 100%;
     }
     
+    .countdown-banner {
+        padding: 8px 15px;
+    }
+
     .countdown-banner .banner-content {
         flex-direction: column;
         text-align: center;
-        gap: 8px;
+        gap: 5px;
     }
     
     .logo-area {
-        margin-bottom: 20px;
+        margin-bottom: 15px;
+    }
+
+    .logo-area h2 {
+        font-size: 1.2rem;
     }
 }
 
