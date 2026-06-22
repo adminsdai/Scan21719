@@ -64,9 +64,12 @@
                     <p class="fine-amount">Hasta 20.000 UTM</p>
                     <p class="fine-desc">O hasta el 4% de ingresos anuales en reincidencia de grandes empresas.</p>
                 </div>
-                <div style="margin-top: 15px; text-align: center;">
+                <div style="margin-top: 15px; text-align: center; display: flex; flex-direction: column; gap: 8px;">
                     <a href="politica-privacidad.html" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 5px;">
                         <i data-lucide="shield" style="width: 14px; height: 14px;"></i> Política de Privacidad
+                    </a>
+                    <a href="terminos-y-condiciones.html" style="color: var(--text-muted); font-size: 0.8rem; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 5px;">
+                        <i data-lucide="file-text" style="width: 14px; height: 14px;"></i> Términos y Condiciones
                     </a>
                 </div>
             </div>
@@ -90,15 +93,21 @@
                             <h3>Ingresa la URL a Analizar</h3>
                             <p class="card-desc">Inspecciona enlaces de privacidad, formularios sin consentimiento, scripts de rastreo y cabeceras HTTP.</p>
                             
-                            <form id="scan-form" class="scan-form">
-                                <div class="input-wrapper">
-                                    <i data-lucide="globe" class="input-icon"></i>
-                                    <input type="text" id="url-input" placeholder="ej: sdaichile.com" value="sdaichile.com" required>
+                            <form id="scan-form">
+                                <div class="scan-form" style="margin-bottom: 10px;">
+                                    <div class="input-wrapper">
+                                        <i data-lucide="globe" class="input-icon"></i>
+                                        <input type="text" id="url-input" placeholder="ej: sdaichile.com" value="sdaichile.com" required>
+                                    </div>
+                                    <button type="submit" id="scan-btn" class="btn btn-primary">
+                                        <span>Iniciar Escaneo</span>
+                                        <i data-lucide="play" class="btn-icon"></i>
+                                    </button>
                                 </div>
-                                <button type="submit" id="scan-btn" class="btn btn-primary">
-                                    <span>Iniciar Escaneo</span>
-                                    <i data-lucide="play" class="btn-icon"></i>
-                                </button>
+                                <div style="margin-bottom: 25px; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: flex-start; gap: 8px;">
+                                    <input type="checkbox" id="scan-consent" required style="margin-top: 3px; accent-color: var(--color-primary);">
+                                    <label for="scan-consent">Acepto los <a href="terminos-y-condiciones.html" target="_blank" style="color: var(--color-primary);">Términos</a> y la <a href="politica-privacidad.html" target="_blank" style="color: var(--color-primary);">Política de Privacidad</a>, y autorizo el escaneo de esta URL.</label>
+                                </div>
                             </form>
                             
                             <!-- Presets -->
@@ -364,6 +373,10 @@
                             <div class="form-group">
                                 <label for="comp-address">Domicilio Físico</label>
                                 <input type="text" id="comp-address" placeholder="ej: Av. Providencia 1234, Santiago" required>
+                            </div>
+                            <div style="margin-bottom: 15px; font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: flex-start; gap: 8px;">
+                                <input type="checkbox" id="policy-consent" required style="margin-top: 3px; accent-color: var(--color-primary);">
+                                <label for="policy-consent">Consiento el tratamiento temporal de estos datos para la generación del documento, según la <a href="politica-privacidad.html" target="_blank" style="color: var(--color-primary);">Política de Privacidad</a>.</label>
                             </div>
                             <button type="submit" class="btn btn-primary">Generar Política</button>
                         </form>
