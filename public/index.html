@@ -11,8 +11,37 @@
     <link rel="stylesheet" href="style.css">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Estilos de carga de sesión */
+        body.auth-checking > * {
+            display: none !important;
+        }
+        body.auth-checking::before {
+            content: '';
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 45px;
+            height: 45px;
+            border: 3px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+            border-top-color: #06b6d4;
+            animation: auth-spin 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            z-index: 999999;
+        }
+        body.auth-checking {
+            background-color: #0b0f19 !important;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        @keyframes auth-spin {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+    </style>
 </head>
-<body>
+<body class="auth-checking">
     <div class="glow-bg"></div>
     
     <!-- Header Warning Banner (Countdown) -->
@@ -52,6 +81,9 @@
                 </button>
                 <button class="nav-btn" data-target="law-tab">
                     <i data-lucide="book-open"></i> Guía de la Ley 21.719
+                </button>
+                <button class="nav-btn" id="logout-btn" style="color: #ef4444; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; margin-top: 15px; border-radius: 0;">
+                    <i data-lucide="log-out"></i> Cerrar Sesión
                 </button>
             </nav>
             

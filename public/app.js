@@ -1,4 +1,22 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Verificar Autenticación (Passkey)
+    try {
+        const sessionResp = await fetch('/api/auth/session');
+        const sessionData = await sessionResp.json();
+        
+        if (!sessionData.authenticated) {
+            // No está autenticado, redirigir a la página de login (admin.html)
+            window.location.href = '/admin.html';
+            return;
+        }
+        // Quitar clase de carga para mostrar la interfaz
+        document.body.classList.remove('auth-checking');
+    } catch (e) {
+        console.error('Error verificando sesión:', e);
+        window.location.href = '/admin.html';
+        return;
+    }
+
     // Initialize Lucide Icons
     lucide.createIcons();
 
@@ -662,4 +680,21 @@ En caso de considerar que el tratamiento de sus datos infringe la legislación, 
             lucide.createIcons();
         }, 2000);
     });
+
+    // 7. Logout Logic
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                const resp = await fetch('/api/auth/logout', { method: 'POST' });
+                if (resp.ok) {
+                    window.location.href = '/admin.html';
+                } else {
+                    alert('Error al cerrar sesión');
+                }
+            } catch (e) {
+                console.error('Error logging out:', e);
+            }
+        });
+    }
 });

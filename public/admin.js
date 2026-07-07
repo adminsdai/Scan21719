@@ -1,6 +1,6 @@
 const { startRegistration, startAuthentication } = SimpleWebAuthnBrowser;
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const loginBtn = document.getElementById('login-btn');
     const setupBtn = document.getElementById('setup-btn');
     const authError = document.getElementById('auth-error');
@@ -8,6 +8,86 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginView = document.getElementById('login-view');
     const dashboardView = document.getElementById('dashboard-view');
     const refreshLogsBtn = document.getElementById('refresh-logs-btn');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    const togglePasswordLogin = document.getElementById('toggle-password-login');
+    const passwordLoginForm = document.getElementById('password-login-form');
+    const passwordInput = document.getElementById('password-input');
+    const passwordLoginBtn = document.getElementById('password-login-btn');
+
+    // Auto-login si ya existe una sesión activa
+    try {
+        const sessionResp = await fetch('/api/auth/session');
+        const sessionData = await sessionResp.json();
+        if (sessionData.authenticated) {
+            showDashboard();
+        }
+    } catch (e) {
+        console.error('Error in auto-login check:', e);
+    }
+
+    // Toggle de formulario de contraseña de respaldo
+    togglePasswordLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (passwordLoginForm.classList.contains('hidden')) {
+            passwordLoginForm.classList.remove('hidden');
+            passwordLoginForm.style.display = 'flex';
+        } else {
+            passwordLoginForm.classList.add('hidden');
+            passwordLoginForm.style.display = 'none';
+        }
+    });
+
+    // Login por contraseña
+    passwordLoginBtn.addEventListener('click', async () => {
+        authError.style.display = 'none';
+        const password = passwordInput.value;
+        if (!password) {
+            authError.innerText = 'Por favor, introduce la contraseña';
+            authError.style.display = 'block';
+            return;
+        }
+
+        passwordLoginBtn.disabled = true;
+        passwordLoginBtn.innerHTML = '<i data-lucide="loader-2" class="spin"></i> Verificando...';
+        lucide.createIcons();
+
+        try {
+            const resp = await fetch('/api/auth/login-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ password })
+            });
+
+            const data = await resp.json();
+            if (resp.ok && data.verified) {
+                showDashboard();
+            } else {
+                throw new Error(data.error || 'Contraseña incorrecta');
+            }
+        } catch (error) {
+            console.error(error);
+            authError.innerText = error.message;
+            authError.style.display = 'block';
+        } finally {
+            passwordLoginBtn.disabled = false;
+            passwordLoginBtn.innerText = 'Iniciar Sesión';
+        }
+    });
+
+    // Logout
+    logoutBtn.addEventListener('click', async () => {
+        try {
+            const resp = await fetch('/api/auth/logout', { method: 'POST' });
+            if (resp.ok) {
+                window.location.reload();
+            } else {
+                alert('Error al cerrar sesión');
+            }
+        } catch (e) {
+            console.error('Error logging out:', e);
+        }
+    });
 
     // SETUP - Registro del primer (y único) administrador
     setupBtn.addEventListener('click', async () => {
@@ -98,6 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
         loginView.classList.remove('active');
         loginView.classList.add('hidden');
         dashboardView.classList.remove('hidden');
+        logoutBtn.classList.remove('hidden');
         loadLogs();
     }
 

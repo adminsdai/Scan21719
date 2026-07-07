@@ -1,12 +1,19 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const https = require('https');
+const { verifySession } = require('../lib/auth');
 
 const httpsAgent = new https.Agent({
   rejectUnauthorized: false
 });
 
 module.exports = async (req, res) => {
+  // Proteger con sesión de Administrador (Passkey)
+  const session = verifySession(req);
+  if (!session || session.role !== 'admin') {
+    return res.status(401).json({ error: 'No autorizado. Se requiere sesión activa de administrador.' });
+  }
+
   let { url } = req.query;
 
   if (!url) {
