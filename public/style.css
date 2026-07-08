@@ -1299,3 +1299,250 @@ tr:last-child td {
         flex-direction: column;
     }
 }
+
+/* ==============================================================================
+   OVERRIDE: ANTHROPIC/CLAUDE EDITORIAL DESIGN FOR SCAN REPORT
+   ============================================================================== */
+
+/* Contenedores Principales estilo Papel Premium */
+.info-card, .results-card, .report-detail-card {
+    background: #fbfaf7 !important; /* Fondo crema cálido tipo Claude */
+    border: 1px solid #e8e6df !important; /* Borde sutil cálido */
+    box-shadow: 0 10px 40px rgba(25, 24, 22, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+    color: #191816 !important; /* Texto principal carbón */
+    backdrop-filter: none !important;
+}
+
+/* Títulos y Tipografías */
+.info-card h3, .results-card h3, .report-detail-card h2 {
+    font-family: 'Playfair Display', Georgia, serif !important;
+    color: #191816 !important;
+    font-weight: 700 !important;
+}
+
+.info-card h3 {
+    font-size: 1.5rem !important;
+}
+
+.report-detail-card h2 {
+    font-size: 1.8rem !important;
+    letter-spacing: -0.5px !important;
+}
+
+.report-detail-card h3, .report-detail-card h4 {
+    color: #191816 !important;
+    font-family: 'Outfit', sans-serif !important;
+}
+
+/* Textos Secundarios y Descripciones */
+.info-card p, 
+.results-card .scan-date, 
+.results-card .stat-label, 
+.results-card .scanned-pages-list-container h4,
+.report-detail-card .pane-header p,
+.report-detail-card .textarea-header span,
+.rec-item-desc {
+    color: #6a6862 !important; /* Gris-marrón atenuado tipo Claude */
+}
+
+/* Tarjeta Inicial de Bienvenida (info-card) */
+.info-card {
+    border-style: dashed !important;
+}
+
+.info-card .info-item span {
+    color: #191816 !important;
+    font-weight: 500 !important;
+}
+
+.info-icon {
+    background: #f4f3ed !important;
+    border: 1px solid #e8e6df !important;
+    color: #cc5a37 !important; /* Color terracota firma de Anthropic */
+}
+
+/* Cajas de Estadísticas (stat-box) */
+.results-card .stat-box {
+    background: #ffffff !important;
+    border: 1px solid #e8e6df !important;
+    color: #191816 !important;
+    box-shadow: 0 2px 8px rgba(25, 24, 22, 0.02) !important;
+}
+
+.results-card .stat-val {
+    color: #191816 !important;
+    font-family: 'Outfit', sans-serif !important;
+}
+
+/* Línea Divisoria del Resumen */
+.results-summary-row {
+    border-bottom: 1px solid #e8e6df !important;
+}
+
+/* Círculo de Puntuación de Cumplimiento */
+.score-circle-bg {
+    stroke: #e8e6df !important;
+}
+
+.score-text .score-number {
+    color: #191816 !important;
+}
+
+.score-text .score-label {
+    color: #6a6862 !important;
+}
+
+/* Pestañas (Tab buttons) del Reporte */
+.tabs-header {
+    border-bottom: 1px solid #e8e6df !important;
+    gap: 15px !important;
+}
+
+.tab-btn {
+    color: #6a6862 !important;
+    border-bottom: 2px solid transparent !important;
+}
+
+.tab-btn:hover {
+    color: #191816 !important;
+}
+
+.tab-btn.active {
+    color: #cc5a37 !important; /* Terracota activo */
+    border-bottom-color: #cc5a37 !important;
+}
+
+/* Encabezado del Panel Interno (pane-header) */
+.pane-header {
+    background: #ffffff !important;
+    border: 1px solid #e8e6df !important;
+    box-shadow: 0 2px 8px rgba(25, 24, 22, 0.02) !important;
+}
+
+.pane-header h4 {
+    color: #191816 !important;
+}
+
+/* Contenedor y Estilo de Tablas */
+.table-container {
+    border: 1px solid #e8e6df !important;
+    background: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(25, 24, 22, 0.02) !important;
+    border-radius: 8px !important;
+}
+
+th {
+    background: #f4f3ed !important; /* Cabeceras con fondo sutilmente cálido */
+    color: #191816 !important;
+    border-bottom: 1px solid #e8e6df !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    font-size: 0.75rem !important;
+    letter-spacing: 0.5px !important;
+}
+
+td {
+    border-bottom: 1px solid #f4f3ed !important;
+    color: #3d3b37 !important;
+    font-size: 0.85rem !important;
+}
+
+tr:hover td {
+    background: #fbfaf7 !important;
+}
+
+/* Badges de Cumplimiento y Estado en la Tabla */
+.badge-status.success {
+    background: #e6f4ea !important;
+    color: #137333 !important;
+    border: 1px solid #ceead6 !important;
+}
+
+.badge-status.warning {
+    background: #fef7e0 !important;
+    color: #b06000 !important;
+    border: 1px solid #feecb3 !important;
+}
+
+.badge-status.danger {
+    background: #fce8e6 !important;
+    color: #c5221f !important;
+    border: 1px solid #fad2cf !important;
+}
+
+/* Badges de Estado General (Crítico, Advertencia, Cumple) */
+.status-badge.critical {
+    background: #fce8e6 !important;
+    color: #c5221f !important;
+    border: 1px solid #fad2cf !important;
+}
+
+.status-badge.warning {
+    background: #fef7e0 !important;
+    color: #b06000 !important;
+    border: 1px solid #feecb3 !important;
+}
+
+.status-badge.compliant {
+    background: #e6f4ea !important;
+    color: #137333 !important;
+    border: 1px solid #ceead6 !important;
+}
+
+/* Grilla de Estado de Cabeceras HTTP */
+.header-status-item {
+    border: 1px solid #e8e6df !important;
+    background: #ffffff !important;
+    color: #191816 !important;
+    box-shadow: 0 2px 8px rgba(25, 24, 22, 0.02) !important;
+}
+
+.header-status-item .header-name {
+    color: #191816 !important;
+}
+
+.header-status-item .header-val {
+    color: #6a6862 !important;
+}
+
+/* Caja de Recomendaciones y Acciones Requeridas */
+.recommendations-box {
+    border-top: 1px solid #e8e6df !important;
+}
+
+.recommendations-box h3 {
+    color: #191816 !important;
+    font-family: 'Playfair Display', Georgia, serif !important;
+}
+
+.rec-item {
+    background: #ffffff !important;
+    border: 1px solid #e8e6df !important;
+    box-shadow: 0 2px 12px rgba(25, 24, 22, 0.02) !important;
+}
+
+.rec-item-title {
+    color: #191816 !important;
+}
+
+.rec-item-desc {
+    color: #53514b !important;
+}
+
+/* Botón de Imprimir Reporte */
+#print-report-btn {
+    border: 1px solid #e8e6df !important;
+    color: #191816 !important;
+    background: #ffffff !important;
+    box-shadow: 0 2px 8px rgba(25, 24, 22, 0.02) !important;
+}
+
+#print-report-btn:hover {
+    background: #f4f3ed !important;
+}
+
+/* Lista de Páginas Crawled */
+#scanned-pages-list li {
+    color: #53514b !important;
+}
+
