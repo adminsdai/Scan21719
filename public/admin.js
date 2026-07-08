@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const logs = await resp.json();
             
             if (!logs || logs.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No hay registros de consentimiento aún.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">No hay registros de consentimiento aún.</td></tr>';
                 return;
             }
 
@@ -215,7 +215,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                         ${log.url_scanned}
                     </td>
                     <td><span class="ip-badge">${log.ip_anonymized}</span></td>
-                    <td style="font-size: 0.8rem; color: var(--text-muted); max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${log.user_agent}">
+                    <td><span class="ip-badge" style="background: rgba(6, 182, 212, 0.08); color: #06b6d4; border: 1px solid rgba(6, 182, 212, 0.15);">${log.user_id || 'anon'}</span></td>
+                    <td><span class="ip-badge" style="background: rgba(255, 255, 255, 0.03); color: var(--text-muted);">${log.policy_version || 'v1.0'}</span></td>
+                    <td style="font-size: 0.8rem; color: var(--text-muted); max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${log.user_agent}">
                         ${log.user_agent}
                     </td>
                 `;

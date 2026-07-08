@@ -187,7 +187,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ 
                     url_scanned: rawUrl, 
-                    user_agent: navigator.userAgent 
+                    user_agent: navigator.userAgent,
+                    policy_version: 'v1.0' // Versión actual de las políticas
                 })
             }).catch(e => console.error('Consent logging failed:', e));
 

@@ -16,7 +16,9 @@ CREATE TABLE IF NOT EXISTS public.consent_logs (
     ip_anonymized VARCHAR(255) NOT NULL,
     user_agent TEXT,
     url_scanned TEXT NOT NULL,
-    action VARCHAR(50) DEFAULT 'AGREED_TO_POLICIES' NOT NULL
+    action VARCHAR(50) DEFAULT 'AGREED_TO_POLICIES' NOT NULL,
+    user_id TEXT,                                      -- ID del administrador que ejecuta la acción
+    policy_version VARCHAR(20) DEFAULT 'v1.0' NOT NULL  -- Versión de las políticas vigentes aceptadas
 );
 
 -- ==============================================================================

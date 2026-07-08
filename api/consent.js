@@ -1,12 +1,19 @@
-const { supabase } = require('../lib/supabase');
+const { verifySession } = require('../lib/auth');
+const { supabaseAdmin } = require('../lib/supabase');
 
 module.exports = async (req, res) => {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
 
+    // Validar sesión del administrador (solo usuarios logueados pueden escanear y consentir)
+    const session = verifySession(req);
+    if (!session || session.role !== 'admin') {
+        return res.status(401).json({ error: 'No autorizado. Se requiere sesión activa de administrador.' });
+    }
+
     try {
-        const { url_scanned, user_agent } = req.body;
+        const { url_scanned, user_agent, policy_version } = req.body;
 
         // Extraer IP de los headers de Vercel (o req.socket como fallback)
         let ip = req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
@@ -18,15 +25,17 @@ module.exports = async (req, res) => {
             ip = ipParts.join('.');
         }
 
-        // Insertar en la BD inmutable usando la key pública (anon_key)
-        const { data, error } = await supabase
+        // Insertar en la BD inmutable usando supabaseAdmin (para evitar bloqueos por RLS)
+        const { data, error } = await supabaseAdmin
             .from('consent_logs')
             .insert([
                 { 
                     ip_anonymized: ip,
                     user_agent: user_agent || req.headers['user-agent'] || 'unknown',
                     url_scanned: url_scanned || 'unknown',
-                    action: 'AGREED_TO_POLICIES'
+                    action: 'AGREED_TO_POLICIES',
+                    user_id: session.user_id || 'unknown',
+                    policy_version: policy_version || 'v1.0'
                 }
             ]);
 
