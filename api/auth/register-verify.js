@@ -39,7 +39,7 @@ module.exports = async (req, res) => {
 
             // Guardar la credencial asociada al user_id autorizado en Supabase
             const { error } = await supabaseAdmin.from('passkey_credentials').insert([{
-                credential_id: base64CredentialID,
+                credential_id: body.rawId || base64CredentialID, // Usar rawId directamente para evitar cualquier discrepancia de encoding
                 public_key: base64PublicKey,
                 counter: counter,
                 transports: transports,

@@ -121,6 +121,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 throw new Error(errMsg);
             }
             const options = await resp.json();
+            console.log('WebAuthn Register Options:', options);
 
             // 2. Invocar WebAuthn en el navegador
             const attResp = await startRegistration(options);
@@ -174,6 +175,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 throw new Error(errMsg);
             }
             const options = await resp.json();
+            console.log('WebAuthn Login Options:', options);
 
             // 2. Invocar WebAuthn
             const asseResp = await startAuthentication(options);
