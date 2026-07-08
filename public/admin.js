@@ -208,6 +208,23 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const tr = document.createElement('tr');
                 const date = new Date(log.created_at).toLocaleString('es-CL');
                 
+                // Tipificación inteligente del usuario para auditoría
+                let userLabel = 'Histórico (Pre-Login)';
+                let userStyle = 'background: rgba(255, 255, 255, 0.05); color: var(--text-muted); border: 1px solid rgba(255, 255, 255, 0.08);';
+                
+                if (log.user_id) {
+                    if (log.user_id === 'admin-password') {
+                        userLabel = 'Admin (Contraseña)';
+                        userStyle = 'background: rgba(249, 115, 22, 0.08); color: #f97316; border: 1px solid rgba(249, 115, 22, 0.15);'; // Naranja
+                    } else if (log.user_id.startsWith('admin')) {
+                        userLabel = 'Admin (Biométrico)';
+                        userStyle = 'background: rgba(6, 182, 212, 0.08); color: #06b6d4; border: 1px solid rgba(6, 182, 212, 0.15);'; // Cian
+                    } else {
+                        userLabel = log.user_id;
+                        userStyle = 'background: rgba(16, 185, 129, 0.08); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.15);'; // Verde
+                    }
+                }
+
                 tr.innerHTML = `
                     <td>${date}</td>
                     <td><span class="action-badge"><i data-lucide="check-circle-2" style="width: 14px; height: 14px;"></i> ${log.action}</span></td>
@@ -215,7 +232,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         ${log.url_scanned}
                     </td>
                     <td><span class="ip-badge">${log.ip_anonymized}</span></td>
-                    <td><span class="ip-badge" style="background: rgba(6, 182, 212, 0.08); color: #06b6d4; border: 1px solid rgba(6, 182, 212, 0.15);">${log.user_id || 'anon'}</span></td>
+                    <td><span class="ip-badge" style="${userStyle}">${userLabel}</span></td>
                     <td><span class="ip-badge" style="background: rgba(255, 255, 255, 0.03); color: var(--text-muted);">${log.policy_version || 'v1.0'}</span></td>
                     <td style="font-size: 0.8rem; color: var(--text-muted); max-width: 180px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${log.user_agent}">
                         ${log.user_agent}
