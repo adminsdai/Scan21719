@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const passwordLoginForm = document.getElementById('password-login-form');
     const passwordInput = document.getElementById('password-input');
     const passwordLoginBtn = document.getElementById('password-login-btn');
+    const usernameInput = document.getElementById('username-input');
 
     // Auto-login si ya existe una sesión activa
     try {
@@ -41,7 +42,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Login por contraseña
     passwordLoginBtn.addEventListener('click', async () => {
         authError.style.display = 'none';
+        const username = usernameInput.value.trim();
         const password = passwordInput.value;
+        if (!username) {
+            authError.innerText = 'Por favor, ingresa tu correo o usuario autorizado';
+            authError.style.display = 'block';
+            return;
+        }
         if (!password) {
             authError.innerText = 'Por favor, introduce la contraseña';
             authError.style.display = 'block';
@@ -56,7 +63,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const resp = await fetch('/api/auth/login-password', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ password })
+                body: JSON.stringify({ username, password })
             });
 
             const data = await resp.json();
@@ -95,8 +102,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         setupBtn.disabled = true;
         
         try {
+            const username = usernameInput.value.trim();
+            if (!username) {
+                throw new Error('Por favor, ingresa tu correo o usuario autorizado.');
+            }
+
             // 1. Obtener opciones de registro del servidor
-            const resp = await fetch('/api/auth/register-generate');
+            const resp = await fetch('/api/auth/register-generate?username=' + encodeURIComponent(username));
             if (!resp.ok) {
                 const textErr = await resp.text();
                 let errMsg = 'Setup unavailable';
@@ -117,7 +129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const verificationResp = await fetch('/api/auth/register-verify', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(attResp),
+                body: JSON.stringify({ ...attResp, username }),
             });
 
             const verificationJSON = await verificationResp.json();
@@ -143,8 +155,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         lucide.createIcons();
 
         try {
+            const username = usernameInput.value.trim();
+            if (!username) {
+                throw new Error('Por favor, ingresa tu correo o usuario autorizado.');
+            }
+
             // 1. Obtener opciones de autenticación
-            const resp = await fetch('/api/auth/login-generate');
+            const resp = await fetch('/api/auth/login-generate?username=' + encodeURIComponent(username));
             if (!resp.ok) {
                 const textErr = await resp.text();
                 let errMsg = 'Login unavailable';

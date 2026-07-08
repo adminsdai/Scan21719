@@ -5,8 +5,12 @@ const { supabaseAdmin } = require('../../lib/supabase');
 module.exports = async (req, res) => {
     if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
-    const body = req.body;
+    const { username, ...body } = req.body; // Extraer el username enviado por el cliente
     const expectedChallenge = getChallengeCookie(req);
+
+    if (!username || username.trim() === '') {
+        return res.status(400).json({ error: 'Falta especificar el usuario autorizado.' });
+    }
 
     if (!expectedChallenge) {
         return res.status(400).json({ error: 'Session expired or challenge missing' });
@@ -22,22 +26,20 @@ module.exports = async (req, res) => {
 
         if (verification.verified) {
             const { registrationInfo } = verification;
-            const { credentialID, credentialPublicKey, counter, credentialDeviceType, credentialBackedUp } = registrationInfo;
+            const { credentialID, credentialPublicKey, counter } = registrationInfo;
 
-            // SimpleWebAuthn v9 returns credentialID and credentialPublicKey as Uint8Array
-            // We store them as base64url strings in the DB
-            // Node.js Buffer handles base64url natively
+            // Convertir a base64url strings para guardar en la BD
             const base64CredentialID = Buffer.from(credentialID).toString('base64url');
             const base64PublicKey = Buffer.from(credentialPublicKey).toString('base64url');
             const transports = body.response.transports || [];
 
-            // Guardar en Supabase
+            // Guardar la credencial asociada al user_id autorizado en Supabase
             const { error } = await supabaseAdmin.from('passkey_credentials').insert([{
                 credential_id: base64CredentialID,
                 public_key: base64PublicKey,
                 counter: counter,
                 transports: transports,
-                user_id: 'admin-1'
+                user_id: username
             }]);
 
             if (error) {

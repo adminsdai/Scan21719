@@ -7,7 +7,22 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- ==============================================================================
--- 2. TABLA DE REGISTRO INMUTABLE (APPEND-ONLY)
+-- 2. TABLA DE USUARIOS AUTORIZADOS (PRE-AUTORIZACIÓN)
+-- Solo los usuarios definidos aquí por SDAI Chile podrán registrarse o loguearse.
+-- ==============================================================================
+CREATE TABLE IF NOT EXISTS public.authorized_users (
+    user_id TEXT PRIMARY KEY,                         -- Correo o nombre de usuario único
+    role VARCHAR(50) DEFAULT 'admin' NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL
+);
+
+-- Insertar administrador inicial por defecto
+INSERT INTO public.authorized_users (user_id, role)
+VALUES ('admin@sdaichile.com', 'admin')
+ON CONFLICT (user_id) DO NOTHING;
+
+-- ==============================================================================
+-- 3. TABLA DE REGISTRO INMUTABLE (APPEND-ONLY)
 -- Cumplimiento de trazabilidad sin posibilidad de alteración.
 -- ==============================================================================
 CREATE TABLE IF NOT EXISTS public.consent_logs (
@@ -22,8 +37,8 @@ CREATE TABLE IF NOT EXISTS public.consent_logs (
 );
 
 -- ==============================================================================
--- 3. TABLA DE CREDENCIALES PASSKEYS (WEBAUTHN)
--- Almacena las llaves públicas biométricas del administrador.
+-- 4. TABLA DE CREDENCIALES PASSKEYS (WEBAUTHN)
+-- Almacena las llaves públicas biométricas de los administradores autorizados.
 -- ==============================================================================
 CREATE TABLE IF NOT EXISTS public.passkey_credentials (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -32,16 +47,36 @@ CREATE TABLE IF NOT EXISTS public.passkey_credentials (
     public_key TEXT NOT NULL,              -- Base64URL encoded public key
     counter BIGINT NOT NULL DEFAULT 0,     -- Prevents cloning attacks
     transports TEXT[],                     -- e.g. ['internal', 'usb']
-    user_id TEXT NOT NULL DEFAULT 'admin'  -- Single admin user for now
+    user_id TEXT NOT NULL                  -- Enlazado al user_id autorizado
 );
 
 -- ==============================================================================
--- 4. CONFIGURACIÓN DE SEGURIDAD A NIVEL DE FILA (RLS)
+-- 5. CONFIGURACIÓN DE SEGURIDAD A NIVEL DE FILA (RLS)
 -- ==============================================================================
 
--- Activar RLS en ambas tablas
+-- Activar RLS en las tablas
+ALTER TABLE public.authorized_users ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.consent_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.passkey_credentials ENABLE ROW LEVEL SECURITY;
+
+-- ------------------------------------------------------------------------------
+-- Políticas para authorized_users
+-- ------------------------------------------------------------------------------
+
+-- Permitir lectura (el backend necesita verificar si existe)
+CREATE POLICY "Permitir lectura general de autorizados" 
+ON public.authorized_users 
+FOR SELECT 
+TO public 
+USING (true);
+
+-- Permitir al backend (service_role) hacer inserciones/modificaciones manuales
+CREATE POLICY "Permitir operaciones backend sobre autorizados" 
+ON public.authorized_users 
+FOR ALL 
+TO public 
+USING (true) 
+WITH CHECK (true);
 
 -- ------------------------------------------------------------------------------
 -- Políticas para consent_logs (Append-Only)
@@ -55,7 +90,6 @@ TO public
 WITH CHECK (true);
 
 -- Permitir SELECT (El backend validará el JWT del admin y luego usará la key para leer)
--- Nota: Para máxima seguridad el backend usará el service_role key para leer, pero si usamos anon:
 CREATE POLICY "Permitir lectura general (protegida por backend)" 
 ON public.consent_logs 
 FOR SELECT 
