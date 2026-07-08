@@ -32,7 +32,7 @@ module.exports = async (req, res) => {
         }
 
         const allowCredentials = credentials.map(cred => ({
-            id: Buffer.from(cred.credential_id, 'base64url'),
+            id: cred.credential_id, // Pasar la cadena Base64URL directamente para compatibilidad con SimpleWebAuthn v13+
             type: 'public-key',
             transports: cred.transports,
         }));
