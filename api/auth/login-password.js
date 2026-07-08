@@ -42,6 +42,6 @@ module.exports = async (req, res) => {
         }
     } catch (error) {
         console.error('Password login error:', error);
-        return res.status(500).json({ error: 'Internal server error' });
+        return res.status(500).json({ error: 'Internal server error: ' + error.message });
     }
 };
