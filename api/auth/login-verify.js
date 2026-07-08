@@ -34,10 +34,11 @@ module.exports = async (req, res) => {
                 expectedChallenge,
                 expectedOrigin: origin,
                 expectedRPID: rpID,
-                authenticator: {
-                    credentialID: Buffer.from(authenticator.credential_id, 'base64url'),
-                    credentialPublicKey: publicKeyBuffer,
+                credential: {
+                    id: authenticator.credential_id, // Base64URL encoded string
+                    publicKey: publicKeyBuffer,      // Uint8Array / Buffer
                     counter: Number(authenticator.counter),
+                    transports: authenticator.transports
                 },
             });
         } catch (error) {
