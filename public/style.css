@@ -1149,6 +1149,21 @@ tr:last-child td {
         color: black !important;
         border-bottom: 1px solid #eee;
     }
+    
+    /* Asegurar que el título y la descripción del reporte sean legibles al imprimir en papel blanco */
+    .welcome-text h1 {
+        background: none !important;
+        -webkit-text-fill-color: #191816 !important;
+        color: #191816 !important;
+        font-family: 'Playfair Display', Georgia, serif !important;
+        font-size: 2.2rem !important;
+        font-weight: 700 !important;
+    }
+    
+    .welcome-text p {
+        color: #53514b !important;
+        font-size: 1rem !important;
+    }
 }
 
 /* Tablet & Mobile responsive styles */
