@@ -98,8 +98,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             // 1. Obtener opciones de registro del servidor
             const resp = await fetch('/api/auth/register-generate');
             if (!resp.ok) {
-                const err = await resp.json();
-                throw new Error(err.error || 'Setup unavailable');
+                let errMsg = 'Setup unavailable';
+                try {
+                    const err = await resp.json();
+                    errMsg = err.error || errMsg;
+                } catch (e) {
+                    const textErr = await resp.text();
+                    errMsg = textErr.substring(0, 100) || errMsg;
+                }
+                throw new Error(errMsg);
             }
             const options = await resp.json();
 
@@ -139,8 +146,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             // 1. Obtener opciones de autenticación
             const resp = await fetch('/api/auth/login-generate');
             if (!resp.ok) {
-                const err = await resp.json();
-                throw new Error(err.error || 'Login unavailable');
+                let errMsg = 'Login unavailable';
+                try {
+                    const err = await resp.json();
+                    errMsg = err.error || errMsg;
+                } catch (e) {
+                    const textErr = await resp.text();
+                    errMsg = textErr.substring(0, 100) || errMsg;
+                }
+                throw new Error(errMsg);
             }
             const options = await resp.json();
 
