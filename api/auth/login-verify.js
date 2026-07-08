@@ -43,7 +43,7 @@ module.exports = async (req, res) => {
             });
         } catch (error) {
             console.error('Verification detailed error:', error);
-            return res.status(400).json({ error: error.message });
+            return res.status(400).json({ error: 'Verification detailed error: ' + error.message + '\nStack: ' + error.stack });
         }
 
         if (verification.verified) {
@@ -64,7 +64,7 @@ module.exports = async (req, res) => {
         }
     } catch (error) {
         console.error('Login error:', error);
-        return res.status(400).json({ error: error.message });
+        return res.status(400).json({ error: 'Login error: ' + error.message + '\nStack: ' + error.stack });
     }
 
     return res.status(400).json({ error: 'Login failed' });
