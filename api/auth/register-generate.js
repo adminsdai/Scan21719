@@ -40,7 +40,7 @@ module.exports = async (req, res) => {
         const options = await generateRegistrationOptions({
             rpName,
             rpID,
-            userID: username,
+            userID: Buffer.from(username), // Convertir a Buffer (Uint8Array) para compatibilidad con SimpleWebAuthn v9+
             userName: username,
             attestationType: 'none',
             authenticatorSelection: {
