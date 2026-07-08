@@ -26,11 +26,15 @@ module.exports = async (req, res) => {
 
         if (verification.verified) {
             const { registrationInfo } = verification;
-            const { credentialID, credentialPublicKey, counter } = registrationInfo;
+            if (!registrationInfo || !registrationInfo.credential) {
+                return res.status(400).json({ error: 'Falta la información de la credencial en la respuesta.' });
+            }
+            const { credential } = registrationInfo;
+            const { id, publicKey, counter } = credential;
 
             // Convertir a base64url strings para guardar en la BD
-            const base64CredentialID = Buffer.from(credentialID).toString('base64url');
-            const base64PublicKey = Buffer.from(credentialPublicKey).toString('base64url');
+            const base64CredentialID = Buffer.from(id).toString('base64url');
+            const base64PublicKey = Buffer.from(publicKey).toString('base64url');
             const transports = body.response.transports || [];
 
             // Guardar la credencial asociada al user_id autorizado en Supabase
